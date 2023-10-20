@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  jpa:
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    properties:
+      hibernate:
+        show_sql=true:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+  datasource:
+    username: user-db
+    password: kt^#54hfff@%*t53gfhj
+    url: jdbc:postgresql://localhost:5432/itmusik
+    driver-class-name: org.postgresql.Driver

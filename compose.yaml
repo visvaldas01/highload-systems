@@ -3,13 +3,13 @@ version: '3.9'
 services:
 
   app:
-    #    container_name: app
+    container_name: app
     build:
       context: .
       dockerfile: Dockerfile
     image: app:latest
     ports:
-      - "80:80"
+      - "8080:8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/itmusik
       - SPRING_DATASOURCE_USERNAME=user-db
@@ -17,6 +17,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
 
   postgres:
+    container_name: postgres
     image: postgres:latest
     environment:
       POSTGRES_DB: "itmusik"

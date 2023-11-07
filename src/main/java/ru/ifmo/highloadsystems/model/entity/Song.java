@@ -23,6 +23,15 @@ public class Song {
     @Column(nullable = false)
     private String name;
 
+    @Column
+    private Float vector1;
+
+    @Column
+    private Float vector2;
+
+    @Column
+    private Float vector3;
+
     @JsonIgnoreProperties(value = "songs")
     @ManyToMany
     @JoinTable(name = "songs_musicians", joinColumns = @JoinColumn(name = "songs_id"), inverseJoinColumns = @JoinColumn(name = "musicians_id"))

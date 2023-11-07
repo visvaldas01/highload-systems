@@ -19,6 +19,10 @@ public class Scrobble {
     @JoinColumn(name = "song_id", referencedColumnName = "id", nullable = false)
     private Song song;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
+
     @Column(nullable = false)
     private Date date;
 }

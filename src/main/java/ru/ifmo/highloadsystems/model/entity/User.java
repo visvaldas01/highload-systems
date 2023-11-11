@@ -17,10 +17,14 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String login;
+    private String username;
 
     @Column(nullable = false)
     private String password;
+
+    @ManyToMany
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
     @JsonIgnoreProperties(value = "users")
     @ManyToMany

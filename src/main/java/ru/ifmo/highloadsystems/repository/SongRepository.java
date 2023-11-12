@@ -6,4 +6,5 @@ import ru.ifmo.highloadsystems.model.entity.Song;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
+    Song findByName(String name);
 }

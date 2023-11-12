@@ -33,4 +33,9 @@ public class Album {
     @ManyToMany
     @JoinTable(name = "albums_users", joinColumns = @JoinColumn(name = "albums_id"), inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Collection<User> users;
+
+    @JsonIgnoreProperties(value = "albums")
+    @ManyToMany
+    @JoinTable(name = "albums_songs", joinColumns = @JoinColumn(name = "albums_id"), inverseJoinColumns = @JoinColumn(name = "song_id"))
+    private Collection<Song> songs;
 }

@@ -47,6 +47,7 @@ public class SecurityConfig {
                         auth -> auth.requestMatchers("/secured").authenticated()
                                 .requestMatchers("/info").authenticated()
                                 .requestMatchers("/admin").hasRole("ADMIN")
+                                .requestMatchers("/albums/add").hasRole("USER")
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(

@@ -1,29 +1,46 @@
 package ru.ifmo.highloadsystems.testcontainers;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.ifmo.highloadsystems.model.entity.User;
-import ru.ifmo.highloadsystems.repository.UserRepository;
 
-import java.util.List;
+import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public class ControllersTest {
-    @Autowired
-    UserRepository userRepository;
+    @LocalServerPort
+    private Integer port;
 
     @Container
-    @ServiceConnection
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest");
+    //TODO: тут должно быть имя dockerimagefile
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("")
+            .withReuse(true)
+            .withDatabaseName("postgresql");
+
+    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of(
+                    "CONTAINER.USERNAME=" + postgreSQLContainer.getUsername(),
+                    "CONTAINER.PASSWORD=" + postgreSQLContainer.getPassword(),
+                    "CONTAINER.URL=" + postgreSQLContainer.getJdbcUrl()
+            ).applyTo(configurableApplicationContext.getEnvironment());
+        }
+    }
 
     @BeforeAll
     static void beforeAll() {
@@ -34,17 +51,28 @@ public class ControllersTest {
     static void afterAll() {
         postgreSQLContainer.stop();
     }
-
-    @Test
-    public void whenAuthTest() {
-        User u1 = new User();
-        u1.setUsername("abcd");
-        u1.setPassword("123123");
-        userRepository.save(u1);
-        List<User> users = userRepository.findAll();
-        User u2 = users.get(users.size() - 1);
-        Assertions.assertEquals(u1.getUsername(), u2.getUsername());
-        Assertions.assertEquals(u1.getPassword(), u2.getPassword());
+    private RequestSpecification whenAuth() {
+        return
+                given()
+                        .contentType(ContentType.JSON)
+                        .when()
+                        .auth()
+                        .preemptive()
+                        .oauth2(
+                                given()
+                                        .contentType(ContentType.JSON)
+                                        .when()
+                                        .auth()
+                                        .preemptive()
+                                        .basic(postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword())
+                                        .post("/login")
+                                        .then()
+                                        .statusCode(200)
+                                        .extract()
+                                        .response()
+                                        .getBody()
+                                        .asString());
     }
+
 }
 

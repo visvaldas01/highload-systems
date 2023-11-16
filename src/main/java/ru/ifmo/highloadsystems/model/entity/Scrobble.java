@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -24,5 +24,5 @@ public class Scrobble {
     private User user;
 
     @Column(nullable = false)
-    private Date date;
+    private LocalDateTime date;
 }

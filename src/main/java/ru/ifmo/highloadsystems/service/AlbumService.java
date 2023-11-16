@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 public class AlbumService {
+    // TODO: только albumRepository
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
 
@@ -33,9 +34,9 @@ public class AlbumService {
     }
 
     public String addSongsToAlbum(AlbumDto album) {
-        Album update_album = albumRepository.findByName(album.getName());
+        Album update_album = albumRepository.findByName(album.getName()).orElseThrow();
         for (SongDto song : album.getSongs()) {
-            update_album.getSongs().add(songRepository.findByName(song.getName()));
+            update_album.getSongs().add(songRepository.findByName(song.getName()).orElseThrow());
         }
         return "Ok";
     }

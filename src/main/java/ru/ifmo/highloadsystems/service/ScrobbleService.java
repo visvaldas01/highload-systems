@@ -19,4 +19,8 @@ public class ScrobbleService {
     public List<Scrobble> getAll() {
         return scrobbleRepository.findAll();
     }
+
+    public Scrobble save(Scrobble scrobble) {
+        return scrobbleRepository.save(scrobble);
+    }
 }

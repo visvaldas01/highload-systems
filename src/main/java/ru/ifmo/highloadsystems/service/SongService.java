@@ -20,4 +20,8 @@ public class SongService {
     public List<Song> getAll() {
         return songRepository.findAll();
     }
+
+    public Optional<Song> getById(Long id) {
+        return songRepository.findById(id);
+    }
 }

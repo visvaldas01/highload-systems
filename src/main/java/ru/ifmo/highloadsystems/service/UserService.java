@@ -64,4 +64,8 @@ public class UserService implements UserDetailsService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
+    public Optional<User> getById(Long id) {
+        return userRepository.findById(id);
+    }
 }

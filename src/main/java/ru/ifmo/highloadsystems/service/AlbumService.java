@@ -6,20 +6,18 @@ import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.dto.SongDto;
 import ru.ifmo.highloadsystems.model.entity.Album;
 import ru.ifmo.highloadsystems.repository.AlbumRepository;
-import ru.ifmo.highloadsystems.repository.SongRepository;
 
 import java.util.List;
 
 @Service
 public class AlbumService {
-    // TODO: только albumRepository
     private final AlbumRepository albumRepository;
-    private final SongRepository songRepository;
+    private final SongService songService;
 
     @Autowired
-    public AlbumService(AlbumRepository albumRepository, SongRepository songRepository) {
+    public AlbumService(AlbumRepository albumRepository, SongService songService) {
         this.albumRepository = albumRepository;
-        this.songRepository = songRepository;
+        this.songService = songService;
     }
 
     public List<Album> getAll()
@@ -36,7 +34,7 @@ public class AlbumService {
     public String addSongsToAlbum(AlbumDto album) {
         Album update_album = albumRepository.findByName(album.getName()).orElseThrow();
         for (SongDto song : album.getSongs()) {
-            update_album.getSongs().add(songRepository.findByName(song.getName()).orElseThrow());
+            update_album.getSongs().add(songService.getByName(song.getName()).orElseThrow());
         }
         return "Ok";
     }

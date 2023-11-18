@@ -8,6 +8,7 @@ import ru.ifmo.highloadsystems.model.entity.Album;
 import ru.ifmo.highloadsystems.repository.AlbumRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlbumService {
@@ -38,4 +39,7 @@ public class AlbumService {
         }
         return "Ok";
     }
+
+    public Optional<Album> getByName(String name)
+    { return albumRepository.findByName(name); }
 }

@@ -33,4 +33,9 @@ public class Tag {
     @ManyToMany
     @JoinTable(name = "musicians_tags", joinColumns = @JoinColumn(name = "tags_id"), inverseJoinColumns = @JoinColumn(name = "musicians_id"))
     private Collection<Musician> musicians;
+
+    @JsonIgnoreProperties(value = "tags")
+    @ManyToOne
+    @JoinColumn(name = "tag_group_id", referencedColumnName = "id", nullable = false)
+    private TagGroup tagGroup;
 }

@@ -4,14 +4,20 @@ CREATE TABLE users
     login    varchar(64) NOT NULL,
     password varchar(64) NOT NULL
 );
-CREATE TABLE tags
+CREATE TABLE tag_groups
 (
     id   serial PRIMARY KEY,
     name varchar(64) NOT NULL
 );
+CREATE TABLE tags
+(
+    id           serial PRIMARY KEY,
+    name         varchar(64)                                     NOT NULL,
+    tag_group_id INTEGER REFERENCES tag_groups ON UPDATE CASCADE NOT NULL
+);
 CREATE TABLE musicians
 (
-    id serial PRIMARY KEY,
+    id   serial PRIMARY KEY,
     name varchar(64) NOT NULL
 );
 CREATE TABLE songs

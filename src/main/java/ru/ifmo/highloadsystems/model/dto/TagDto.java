@@ -15,4 +15,6 @@ public class TagDto {
     Collection<AlbumDto> albums;
 
     Collection<MusicianDto> musicians;
+
+    TagGroupDto tagGroup;
 }

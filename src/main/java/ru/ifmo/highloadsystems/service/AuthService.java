@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.ifmo.highloadsystems.exception.RegisterException;
@@ -11,7 +12,10 @@ import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.JwtResponse;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
 import ru.ifmo.highloadsystems.model.dto.UserDto;
+import ru.ifmo.highloadsystems.model.entity.User;
 import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +44,11 @@ public class AuthService {
 
         var user = userService.getNewUser(registrationUserDto);
         return ResponseEntity.ok(new UserDto(user.getUsername(), user.getPassword()));
+    }
+
+    public Optional<User> getUserFromContext()
+    {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.findByUsername(name);
     }
 }

@@ -2,6 +2,7 @@ package ru.ifmo.highloadsystems.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.entity.Album;
@@ -28,6 +29,7 @@ public class AlbumController {
     { return ResponseEntity.ok(albumService.addNewAlbum(album)); }
 
     @PostMapping("/addSong")
+    @Transactional
     public ResponseEntity<String> addSongToAlbum(@RequestBody AlbumDto album)
     { return ResponseEntity.ok(albumService.addSongsToAlbum(album)); }
 }

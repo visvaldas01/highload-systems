@@ -2,6 +2,7 @@ package ru.ifmo.highloadsystems.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.ifmo.highloadsystems.exception.NothingToAddException;
 import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.dto.SongDto;
@@ -35,7 +36,7 @@ public class TagService {
         return tagRepository.findAll();
     }
 
-    public boolean addTag(TagDto tagDto) {
+    public void addTag(TagDto tagDto) {
         Optional<Tag> optionalTag = tagRepository.findByName(tagDto.getName());
         if (optionalTag.isPresent()) {
             Tag modifiableTag = optionalTag.get();
@@ -44,21 +45,18 @@ public class TagService {
                     Optional<Musician> musicianOptional = musicianService.findByName(musician.getName());
                     musicianOptional.ifPresent(value -> modifiableTag.getMusicians().add(value));
                 }
-                return true;
             } else if (!tagDto.getSongs().isEmpty()) {
                 for (SongDto song : tagDto.getSongs()) {
                     Optional<Song> songOptional = songService.findByName(song.getName());
                     songOptional.ifPresent(value -> modifiableTag.getSongs().add(value));
                 }
-                return true;
             } else if (!tagDto.getAlbums().isEmpty()) {
                 for (AlbumDto album : tagDto.getAlbums()) {
                     Optional<Album> albumOptional = albumService.findByName(album.getName());
                     albumOptional.ifPresent(value -> modifiableTag.getAlbums().add(value));
                 }
-                return true;
             } else
-                return false;
-        } else return false;
+                throw new NothingToAddException("No data to add in message");
+        } else throw new NothingToAddException("Tag not existing");
     }
 }

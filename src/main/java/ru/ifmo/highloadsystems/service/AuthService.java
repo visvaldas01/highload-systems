@@ -1,14 +1,12 @@
 package ru.ifmo.highloadsystems.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.ifmo.highloadsystems.exception.AppError;
+import ru.ifmo.highloadsystems.exception.RegisterException;
 import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.JwtResponse;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
@@ -24,13 +22,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
-        } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(
-                    new AppError(HttpStatus.UNAUTHORIZED.value(), "Not valid username or password"),
-                    HttpStatus.UNAUTHORIZED);
-        }
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
+
         var userDetails = userService.loadUserByUsername(authRequest.username());
         var token = jwtTokensUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
@@ -39,10 +32,10 @@ public class AuthService {
 
     public ResponseEntity<?> createNewUser(@RequestBody RegistrationUserDto registrationUserDto) {
         if (!registrationUserDto.password().equals(registrationUserDto.confirmPassword())) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Passwords not match"), HttpStatus.BAD_REQUEST);
+            throw new RegisterException("Passwords not match");
         }
         if (userService.findByUsername(registrationUserDto.username()).isPresent()) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "User with this name already exists"), HttpStatus.BAD_REQUEST);
+            throw new RegisterException("User with this name already exists");
         }
 
         var user = userService.getNewUser(registrationUserDto);

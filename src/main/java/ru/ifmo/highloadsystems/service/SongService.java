@@ -21,11 +21,11 @@ public class SongService {
         return songRepository.findAll();
     }
 
-    public Optional<Song> getById(Long id) {
+    public Optional<Song> findById(Long id) {
         return songRepository.findById(id);
     }
 
-    public Optional<Song> getByName(String name) {
+    public Optional<Song> findByName(String name) {
         return songRepository.findByName(name);
     }
 }

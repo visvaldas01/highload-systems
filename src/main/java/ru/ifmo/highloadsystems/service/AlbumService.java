@@ -35,11 +35,11 @@ public class AlbumService {
     public String addSongsToAlbum(AlbumDto album) {
         Album update_album = albumRepository.findByName(album.getName()).orElseThrow();
         for (SongDto song : album.getSongs()) {
-            update_album.getSongs().add(songService.getByName(song.getName()).orElseThrow());
+            update_album.getSongs().add(songService.findByName(song.getName()).orElseThrow());
         }
         return "Ok";
     }
 
-    public Optional<Album> getByName(String name)
+    public Optional<Album> findByName(String name)
     { return albumRepository.findByName(name); }
 }

@@ -47,13 +47,13 @@ public class TagService {
                 return true;
             } else if (!tagDto.getSongs().isEmpty()) {
                 for (SongDto song : tagDto.getSongs()) {
-                    Optional<Song> songOptional = songService.getByName(song.getName());
+                    Optional<Song> songOptional = songService.findByName(song.getName());
                     songOptional.ifPresent(value -> modifiableTag.getSongs().add(value));
                 }
                 return true;
             } else if (!tagDto.getAlbums().isEmpty()) {
                 for (AlbumDto album : tagDto.getAlbums()) {
-                    Optional<Album> albumOptional = albumService.getByName(album.getName());
+                    Optional<Album> albumOptional = albumService.findByName(album.getName());
                     albumOptional.ifPresent(value -> modifiableTag.getAlbums().add(value));
                 }
                 return true;

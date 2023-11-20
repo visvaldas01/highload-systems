@@ -30,15 +30,15 @@ public class MusicianService {
 
     public void add(MusicianDto dto)
     {
-            Optional<Musician> optionalMusician = findByName(dto.getName());
-            if (optionalMusician.isPresent())
-                throw new AlreadyExistException("Musician already exist");
-            else
-            {
-                Musician musician = new Musician();
-                musician.setName(dto.getName());
-                musicianRepository.save(musician);
-            }
+        Optional<Musician> optionalMusician = findByName(dto.getName());
+        if (optionalMusician.isPresent())
+            throw new AlreadyExistException("Musician already exist");
+        else
+        {
+            Musician musician = new Musician();
+            musician.setName(dto.getName());
+            musicianRepository.save(musician);
+        }
     }
 
     public Collection<Musician> fromDto(Collection<MusicianDto> dto)

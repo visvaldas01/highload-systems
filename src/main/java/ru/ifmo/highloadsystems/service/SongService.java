@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.model.dto.SongDto;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 import ru.ifmo.highloadsystems.model.entity.Song;
@@ -36,6 +37,18 @@ public class SongService {
 
     public Song save(Song song) {
         return songRepository.save(song);
+    }
+
+    public void add(SongDto dto) {
+        Optional<Song> optionalSong = findByName(dto.getName());
+        if (optionalSong.isPresent())
+            throw new AlreadyExistException("Song already exist");
+        else
+        {
+            Song song = new Song();
+            song.setName(dto.getName());
+            songRepository.save(song);
+        }
     }
 
     public Collection<Song> fromDto(Collection<SongDto> dto)

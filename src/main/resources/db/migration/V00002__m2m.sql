@@ -50,5 +50,6 @@ CREATE TABLE musicians_users
 CREATE TABLE albums_songs
 (
     albums_id INTEGER REFERENCES albums ON DELETE CASCADE NOT NULL,
-    songs_id INTEGER REFERENCES songs ON DELETE CASCADE NOT NULL
+    songs_id  INTEGER REFERENCES songs ON DELETE CASCADE  NOT NULL,
+    PRIMARY KEY (albums_id, songs_id)
 );

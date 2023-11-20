@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.ifmo.highloadsystems.exception.AppError;
-import ru.ifmo.highloadsystems.exception.NoPermissionException;
-import ru.ifmo.highloadsystems.exception.NothingToAddException;
-import ru.ifmo.highloadsystems.exception.RegisterException;
+import ru.ifmo.highloadsystems.exception.*;
 
 @ControllerAdvice
 public class RestExceptionHandler
@@ -33,5 +30,10 @@ public class RestExceptionHandler
     @ExceptionHandler(value = { NoPermissionException.class })
     protected ResponseEntity<?> noPermissionHandler(RegisterException ex, WebRequest request) {
         return new ResponseEntity<>(new AppError(HttpStatus.LOCKED.value(), ex.getMessage()), HttpStatus.LOCKED);
+    }
+
+    @ExceptionHandler(value = { AlreadyExistException.class })
+    protected ResponseEntity<?> alreadyExistHandler(RegisterException ex, WebRequest request) {
+        return new ResponseEntity<>(new AppError(HttpStatus.EXPECTATION_FAILED.value(), ex.getMessage()), HttpStatus.EXPECTATION_FAILED);
     }
 }

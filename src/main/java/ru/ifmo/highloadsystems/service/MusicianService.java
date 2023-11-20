@@ -3,6 +3,7 @@ package ru.ifmo.highloadsystems.service;
 import com.sun.source.tree.BreakTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 import ru.ifmo.highloadsystems.repository.MusicianRepository;
@@ -26,6 +27,19 @@ public class MusicianService {
     }
 
     public Optional<Musician> findByName(String name) { return musicianRepository.findByName(name); }
+
+    public void add(MusicianDto dto)
+    {
+            Optional<Musician> optionalMusician = findByName(dto.getName());
+            if (optionalMusician.isPresent())
+                throw new AlreadyExistException("Musician already exist");
+            else
+            {
+                Musician musician = new Musician();
+                musician.setName(dto.getName());
+                musicianRepository.save(musician);
+            }
+    }
 
     public Collection<Musician> fromDto(Collection<MusicianDto> dto)
     {

@@ -4,7 +4,7 @@ ALTER TABLE users
 CREATE TABLE roles
 (
     id   SERIAL,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 --

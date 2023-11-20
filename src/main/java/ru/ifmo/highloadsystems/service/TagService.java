@@ -80,4 +80,7 @@ public class TagService {
                 throw new NothingToAddException("No data to add in message");
         } else throw new NothingToAddException("Tag not existing");
     }
+
+    public Optional<Tag> findByName(String name)
+    { return tagRepository.findByName(name); }
 }

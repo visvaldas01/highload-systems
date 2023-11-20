@@ -28,8 +28,10 @@ public class AlbumController {
     public ResponseEntity<?> addAlbum(@RequestBody AlbumDto album)
     { return ResponseEntity.ok(albumService.addNewAlbum(album)); }
 
-    @PostMapping("/addSong")
+    @PostMapping("/add_to_album")
     @Transactional
-    public ResponseEntity<String> addSongToAlbum(@RequestBody AlbumDto album)
-    { return ResponseEntity.ok(albumService.addSongsToAlbum(album)); }
+    public ResponseEntity<String> addToAlbum(@RequestBody AlbumDto album)
+    {
+        albumService.addToAlbum(album);
+        return ResponseEntity.ok().build(); }
 }

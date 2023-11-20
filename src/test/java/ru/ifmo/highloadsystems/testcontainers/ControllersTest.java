@@ -41,12 +41,12 @@ public class ControllersTest {
     @Test
     public void whenAuthTest() {
         User u1 = new User();
-        u1.setLogin("abcd");
+        u1.setUsername("abcd");
         u1.setPassword("123123");
         userRepository.save(u1);
         List<User> users = userRepository.findAll();
         User u2 = users.get(users.size() - 1);
-        Assert.assertEquals(u1.getLogin(), u2.getLogin());
+        Assert.assertEquals(u1.getUsername(), u2.getUsername());
         Assert.assertEquals(u1.getPassword(), u2.getPassword());
     }
 }

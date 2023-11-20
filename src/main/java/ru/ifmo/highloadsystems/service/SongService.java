@@ -28,4 +28,8 @@ public class SongService {
     public Optional<Song> findByName(String name) {
         return songRepository.findByName(name);
     }
+
+    public Song save(Song song) {
+        return songRepository.save(song);
+    }
 }

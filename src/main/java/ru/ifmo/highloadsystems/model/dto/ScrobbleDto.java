@@ -1,7 +1,8 @@
 package ru.ifmo.highloadsystems.model.dto;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import lombok.NonNull;
 
-public record ScrobbleDto(Long songId, Long userId, LocalDateTime date) {
+import java.time.LocalDateTime;
+
+public record ScrobbleDto(@NonNull SongDto song, @NonNull LocalDateTime date) {
 }

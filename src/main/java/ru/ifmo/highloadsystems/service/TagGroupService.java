@@ -2,6 +2,10 @@ package ru.ifmo.highloadsystems.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.ifmo.highloadsystems.exception.AlreadyExistException;
+import ru.ifmo.highloadsystems.model.dto.TagDto;
+import ru.ifmo.highloadsystems.model.dto.TagGroupDto;
+import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.model.entity.TagGroup;
 import ru.ifmo.highloadsystems.repository.TagGroupRepository;
 
@@ -22,4 +26,17 @@ public class TagGroupService {
     }
 
     public Optional<TagGroup> findByName(String name) { return tagGroupRepository.findByName(name); }
+
+    public void add(TagGroupDto dto)
+    {
+        Optional<TagGroup> optionalTagGroup = tagGroupRepository.findByName(dto.name());
+        if (optionalTagGroup.isPresent())
+            throw new AlreadyExistException("Song already exist");
+        else
+        {
+            TagGroup tagGroup = new TagGroup();
+            tagGroup.setName(dto.name());
+            tagGroupRepository.save(tagGroup);
+        }
+    }
 }

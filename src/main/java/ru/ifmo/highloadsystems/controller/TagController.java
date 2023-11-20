@@ -3,10 +3,7 @@ package ru.ifmo.highloadsystems.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.TagDto;
 import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.service.TagService;
@@ -26,9 +23,16 @@ public class TagController {
     public ResponseEntity<List<Tag>> getAll()
     { return ResponseEntity.ok(tagService.getAll()); }
 
-    @GetMapping("/add")
+    @PostMapping
+    public ResponseEntity<?> addTag(@RequestBody TagDto dto)
+    {
+        tagService.add(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/add_to_tag")
     @Transactional
-    public ResponseEntity<?> addTags(@RequestBody TagDto tag)
+    public ResponseEntity<?> addToTag(@RequestBody TagDto tag)
     {
         tagService.addTag(tag);
         return ResponseEntity.ok().build();

@@ -1,10 +1,14 @@
 package ru.ifmo.highloadsystems.service;
 
+import com.sun.source.tree.BreakTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 import ru.ifmo.highloadsystems.repository.MusicianRepository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +26,24 @@ public class MusicianService {
     }
 
     public Optional<Musician> findByName(String name) { return musicianRepository.findByName(name); }
+
+    public Collection<Musician> fromDto(Collection<MusicianDto> dto)
+    {
+        Collection<Musician> list = new ArrayList<>();
+        for (MusicianDto mus: dto) {
+            Optional<Musician> optionalMusician = findByName(mus.getName());
+            if (optionalMusician.isPresent())
+            {
+                list.add(optionalMusician.get());
+            }
+            else
+            {
+                Musician tmpMus = new Musician();
+                tmpMus.setName(mus.getName());
+                list.add(tmpMus);
+                musicianRepository.save(tmpMus);
+            }
+        }
+        return list;
+    }
 }

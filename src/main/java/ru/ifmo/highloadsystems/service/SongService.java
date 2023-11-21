@@ -14,6 +14,7 @@ import ru.ifmo.highloadsystems.model.entity.Album;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.model.entity.User;
+import ru.ifmo.highloadsystems.recommendation.Recommendation;
 import ru.ifmo.highloadsystems.repository.SongRepository;
 
 import java.util.*;
@@ -119,15 +120,14 @@ public class SongService {
         Optional<User> user = authService.getUserFromContext();
         if (user.isPresent())
         {
+            Recommendation rec = new Recommendation(user.get().getSongs(), songRepository);
             switch (roleService.getUserRole().getName())
             {
                 case "ROLE_USER": {
-                    List<Song> allSongs = songRepository.findAll();
-                    return allSongs.get((int) (Math.random() * allSongs.size()));
+                    return rec.GetNextSong(0);
                 }
                 case "ROLE_ADMIN": {
-                    List<Song> allSongs = songRepository.findAll();
-                    return allSongs.get((int) (Math.random() * allSongs.size()));
+                    return rec.GetNextSong(-1);
                 }
                 default:
                     throw new NoPermissionException("Don't have permission to have recommendation");

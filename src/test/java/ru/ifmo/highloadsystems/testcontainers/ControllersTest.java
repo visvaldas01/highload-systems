@@ -1,14 +1,12 @@
 package ru.ifmo.highloadsystems.testcontainers;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -17,7 +15,6 @@ import ru.ifmo.highloadsystems.repository.UserRepository;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public class ControllersTest {
@@ -46,8 +43,8 @@ public class ControllersTest {
         userRepository.save(u1);
         List<User> users = userRepository.findAll();
         User u2 = users.get(users.size() - 1);
-        Assert.assertEquals(u1.getUsername(), u2.getUsername());
-        Assert.assertEquals(u1.getPassword(), u2.getPassword());
+        Assertions.assertEquals(u1.getUsername(), u2.getUsername());
+        Assertions.assertEquals(u1.getPassword(), u2.getPassword());
     }
 }
 

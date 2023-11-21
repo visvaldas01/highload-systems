@@ -11,4 +11,6 @@ public class AlbumDto {
     private String name;
 
     private Collection<SongDto> songs;
+    private Collection<TagDto> tags;
+    private Collection<MusicianDto> musicians;
 }

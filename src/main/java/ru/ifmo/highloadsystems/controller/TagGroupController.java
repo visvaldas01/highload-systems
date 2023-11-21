@@ -2,9 +2,8 @@ package ru.ifmo.highloadsystems.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.ifmo.highloadsystems.model.dto.TagGroupDto;
 import ru.ifmo.highloadsystems.model.entity.TagGroup;
 import ru.ifmo.highloadsystems.service.TagGroupService;
 
@@ -22,4 +21,11 @@ public class TagGroupController {
     @GetMapping("/all")
     public ResponseEntity<List<TagGroup>> getAll()
     { return ResponseEntity.ok(tagGroupService.getAll()); }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@RequestBody TagGroupDto dto)
+    {
+        tagGroupService.add(dto);
+        return ResponseEntity.ok().build();
+    }
 }

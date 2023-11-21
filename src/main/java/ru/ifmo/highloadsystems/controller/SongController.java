@@ -38,4 +38,8 @@ public class SongController {
         songService.addTo(songDto);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/recommend")
+    public ResponseEntity<?> recommend()
+    { return ResponseEntity.ok(songService.recommend()); }
 }

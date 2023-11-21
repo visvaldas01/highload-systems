@@ -5,9 +5,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
+import ru.ifmo.highloadsystems.exception.NothingToAddException;
+import ru.ifmo.highloadsystems.model.dto.AlbumDto;
+import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.dto.SongDto;
+import ru.ifmo.highloadsystems.model.dto.TagDto;
+import ru.ifmo.highloadsystems.model.entity.Album;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 import ru.ifmo.highloadsystems.model.entity.Song;
+import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.repository.SongRepository;
 
 import java.util.ArrayList;
@@ -17,10 +23,14 @@ import java.util.Optional;
 @Service
 public class SongService {
     private final SongRepository songRepository;
+    private final MusicianService musicianService;
+    private final AlbumService albumService;
 
     @Autowired
-    public SongService(SongRepository songRepository) {
+    public SongService(SongRepository songRepository, MusicianService musicianService, AlbumService albumService) {
         this.songRepository = songRepository;
+        this.musicianService = musicianService;
+        this.albumService = albumService;
     }
 
     public Page<Song> getAll(PageRequest of) {
@@ -49,6 +59,37 @@ public class SongService {
             song.setName(dto.getName());
             songRepository.save(song);
         }
+    }
+
+    public void addTo(SongDto dto) {
+        Optional<Song> optionalSong = songRepository.findByName(dto.getName());
+        if (optionalSong.isPresent()) {
+            Song modifiableSong = optionalSong.get();
+
+            if (!dto.getMusician().isEmpty()) {
+                for (MusicianDto mus : dto.getMusician()) {
+                    Optional<Musician> musicianOptional = musicianService.findByName(mus.getName());
+                    if (musicianOptional.isPresent())
+                        modifiableSong.getMusicians().add(musicianOptional.get());
+                    else {
+                        musicianService.add(mus);
+                        modifiableSong.getMusicians().add(musicianService.findByName(mus.getName()).get());
+                    }
+                }
+            } else if (!dto.getAlbum().isEmpty()) {
+                for (AlbumDto alb : dto.getAlbum()) {
+                    Optional<Album> albumOptional = albumService.findByName(alb.getName());
+                    if (albumOptional.isPresent())
+                        modifiableSong.getAlbums().add(albumOptional.get());
+                    else
+                    {
+                        albumService.addNewAlbum(alb);
+                        modifiableSong.getAlbums().add(albumService.findByName(alb.getName()).get());
+                    }
+                }
+            }else
+                throw new NothingToAddException("No data to add in song");
+        } else throw new NothingToAddException("Song not existing");
     }
 
     public Collection<Song> fromDto(Collection<SongDto> dto)

@@ -31,4 +31,11 @@ public class SongController {
         songService.add(songDto);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/add_to")
+    public ResponseEntity<?> addTo(@RequestBody SongDto songDto)
+    {
+        songService.addTo(songDto);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -8,6 +8,6 @@ import java.util.Collection;
 @Data
 public class SongDto {
     @NonNull String name;
-    @NonNull Collection<MusicianDto> musician;
-    String album;
+    Collection<MusicianDto> musician;
+    Collection<AlbumDto> album;
 }

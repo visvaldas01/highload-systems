@@ -23,15 +23,13 @@ import java.util.*;
 public class SongService {
     private final SongRepository songRepository;
     private final MusicianService musicianService;
-    private final AlbumService albumService;
     private final AuthService authService;
     private final RoleService roleService;
 
     @Autowired
-    public SongService(SongRepository songRepository, MusicianService musicianService, AlbumService albumService, AuthService authService, RoleService roleService) {
+    public SongService(SongRepository songRepository, MusicianService musicianService, AuthService authService, RoleService roleService) {
         this.songRepository = songRepository;
         this.musicianService = musicianService;
-        this.albumService = albumService;
         this.authService = authService;
         this.roleService = roleService;
     }
@@ -77,17 +75,6 @@ public class SongService {
                     else {
                         musicianService.add(mus);
                         modifiableSong.getMusicians().add(musicianService.findByName(mus.getName()).get());
-                    }
-                }
-            } else if (!dto.getAlbum().isEmpty()) {
-                for (AlbumDto alb : dto.getAlbum()) {
-                    Optional<Album> albumOptional = albumService.findByName(alb.getName());
-                    if (albumOptional.isPresent())
-                        modifiableSong.getAlbums().add(albumOptional.get());
-                    else
-                    {
-                        albumService.addNewAlbum(alb);
-                        modifiableSong.getAlbums().add(albumService.findByName(alb.getName()).get());
                     }
                 }
             }else

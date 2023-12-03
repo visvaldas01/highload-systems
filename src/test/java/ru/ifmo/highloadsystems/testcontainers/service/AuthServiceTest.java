@@ -71,6 +71,6 @@ public class AuthServiceTest {
     })
     void invalidPasswordAuthTest(String regUsername, String regPassword, String authUsername, String authPassword) {
         Assertions.assertInstanceOf(UserDto.class, authService.createNewUser(new RegistrationUserDto(regUsername, regPassword, regPassword)).getBody());
-        Assertions.assertInstanceOf(AppError.class, authService.createAuthToken(new JwtRequest(authUsername, authPassword)).getBody());
+        Assertions.assertThrows(BadCredentialsException.class, () -> {authService.createAuthToken(new JwtRequest(authUsername, authPassword));});
     }
 }

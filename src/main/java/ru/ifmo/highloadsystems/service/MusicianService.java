@@ -60,4 +60,7 @@ public class MusicianService {
         }
         return list;
     }
+
+    public void deleteAll()
+    { musicianRepository.deleteAll(); }
 }

@@ -39,4 +39,7 @@ public class TagGroupService {
             tagGroupRepository.save(tagGroup);
         }
     }
+
+    public void deleteAll()
+    { tagGroupRepository.deleteAll(); }
 }

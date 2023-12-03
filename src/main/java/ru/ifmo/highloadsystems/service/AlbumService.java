@@ -1,5 +1,6 @@
 package ru.ifmo.highloadsystems.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
@@ -53,12 +54,13 @@ public class AlbumService {
     public Optional<Album> findByName(String name)
     { return albumRepository.findByName(name); }
 
+    @Transactional
     public void addToAlbum(AlbumDto albumDto) {
         Optional<Album> optionalAlbum = albumRepository.findByName(albumDto.getName());
         if (optionalAlbum.isPresent()) {
             Album modifiableAlbum = optionalAlbum.get();
 
-            if (!albumDto.getSongs().isEmpty()) {
+            if (albumDto.getSongs() != null && !albumDto.getSongs().isEmpty()) {
                 for (SongDto song : albumDto.getSongs()) {
                     Optional<Song> songOptional = songService.findByName(song.getName());
                     if (songOptional.isPresent())
@@ -68,7 +70,7 @@ public class AlbumService {
                         modifiableAlbum.getSongs().add(songService.findByName(song.getName()).get());
                     }
                 }
-            } else if (!albumDto.getTags().isEmpty()) {
+            } else if (albumDto.getTags() != null && !albumDto.getTags().isEmpty()) {
                 for (TagDto tag : albumDto.getTags()) {
                     Optional<Tag> tagOptional = tagService.findByName(tag.getName());
                     if (tagOptional.isPresent())
@@ -79,7 +81,7 @@ public class AlbumService {
                         modifiableAlbum.getTags().add(tagService.findByName(tag.getName()).get());
                     }
                 }
-            } else if (!albumDto.getMusicians().isEmpty()) {
+            } else if (albumDto.getMusicians() != null && !albumDto.getMusicians().isEmpty()) {
                 for (MusicianDto mus : albumDto.getMusicians()) {
                     Optional<Musician> musicianOptional = musicianService.findByName(mus.getName());
                     if (musicianOptional.isPresent())
@@ -92,6 +94,9 @@ public class AlbumService {
                 }
             }else
                 throw new NothingToAddException("No data to add in message");
-        } else throw new NothingToAddException("Tag not existing");
+        } else throw new NothingToAddException("Album not existing");
     }
+
+    public void deleteAll()
+    { albumRepository.deleteAll(); }
 }

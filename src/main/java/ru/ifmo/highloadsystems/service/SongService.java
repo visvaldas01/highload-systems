@@ -126,4 +126,7 @@ public class SongService {
             return allSongs.get((int) (Math.random() * allSongs.size()));
         }
     }
+
+    public void deleteAll()
+    { songRepository.deleteAll(); }
 }

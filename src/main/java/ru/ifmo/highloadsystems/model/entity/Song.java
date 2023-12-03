@@ -33,22 +33,22 @@ public class Song {
     private Float vector3;
 
     @JsonIgnoreProperties(value = "songs")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "songs_musicians", joinColumns = @JoinColumn(name = "songs_id"), inverseJoinColumns = @JoinColumn(name = "musicians_id"))
     private Collection<Musician> musicians;
 
     @JsonIgnoreProperties(value = "songs")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "songs_tags", joinColumns = @JoinColumn(name = "songs_id"), inverseJoinColumns = @JoinColumn(name = "tags_id"))
     private Collection<Tag> tags;
 
     @JsonIgnoreProperties(value = "songs")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "songs_users", joinColumns = @JoinColumn(name = "songs_id"), inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Collection<User> users;
 
     @JsonIgnoreProperties(value = "songs")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "albums_songs", joinColumns = @JoinColumn(name = "songs_id"), inverseJoinColumns = @JoinColumn(name = "albums_id"))
     private Collection<Album> albums;
 }

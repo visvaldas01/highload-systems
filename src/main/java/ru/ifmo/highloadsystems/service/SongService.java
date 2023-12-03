@@ -1,5 +1,6 @@
 package ru.ifmo.highloadsystems.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,12 +63,13 @@ public class SongService {
         }
     }
 
+    @Transactional
     public void addTo(SongDto dto) {
         Optional<Song> optionalSong = songRepository.findByName(dto.getName());
         if (optionalSong.isPresent()) {
             Song modifiableSong = optionalSong.get();
 
-            if (!dto.getMusician().isEmpty()) {
+            if (dto.getMusician() != null && !dto.getMusician().isEmpty()) {
                 for (MusicianDto mus : dto.getMusician()) {
                     Optional<Musician> musicianOptional = musicianService.findByName(mus.getName());
                     if (musicianOptional.isPresent())

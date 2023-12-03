@@ -17,16 +17,14 @@ import java.util.Optional;
 @Service
 public class TagService {
     private final TagRepository tagRepository;
-    private final AlbumService albumService;
     private final SongService songService;
     private final MusicianService musicianService;
     private final TagGroupService tagGroupService;
 
 
     @Autowired
-    public TagService(TagRepository tagRepository, AlbumService albumService, SongService songService, MusicianService musicianService, TagGroupService tagGroupService) {
+    public TagService(TagRepository tagRepository, SongService songService, MusicianService musicianService, TagGroupService tagGroupService) {
         this.tagRepository = tagRepository;
-        this.albumService = albumService;
         this.songService = songService;
         this.musicianService = musicianService;
         this.tagGroupService = tagGroupService;
@@ -70,11 +68,6 @@ public class TagService {
                 for (SongDto song : tagDto.getSongs()) {
                     Optional<Song> songOptional = songService.findByName(song.getName());
                     songOptional.ifPresent(value -> modifiableTag.getSongs().add(value));
-                }
-            } else if (!tagDto.getAlbums().isEmpty()) {
-                for (AlbumDto album : tagDto.getAlbums()) {
-                    Optional<Album> albumOptional = albumService.findByName(album.getName());
-                    albumOptional.ifPresent(value -> modifiableTag.getAlbums().add(value));
                 }
             } else
                 throw new NothingToAddException("No data to add in message");

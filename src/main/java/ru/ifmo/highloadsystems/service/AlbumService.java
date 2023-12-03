@@ -3,6 +3,7 @@ package ru.ifmo.highloadsystems.service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
 import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
@@ -37,9 +38,14 @@ public class AlbumService {
 
     public String addNewAlbum(AlbumDto album)
     {
-        Album newAlbum = new Album();
-        newAlbum.setName(album.getName());
-        albumRepository.save(newAlbum);
+        Optional<Album> optionalAlbum = albumRepository.findByName(album.getName());
+        if (optionalAlbum.isPresent())
+            throw new AlreadyExistException("Album already exist");
+        else {
+            Album newAlbum = new Album();
+            newAlbum.setName(album.getName());
+            albumRepository.save(newAlbum);
+        }
         return "Ok";
     }
 

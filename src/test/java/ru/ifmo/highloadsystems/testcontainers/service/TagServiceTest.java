@@ -7,6 +7,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
 import ru.ifmo.highloadsystems.model.dto.*;
 import ru.ifmo.highloadsystems.service.*;
@@ -58,6 +59,16 @@ public class TagServiceTest {
         tagDto.setTagGroup(new TagGroupDto("TagGroup1"));
         tagService.add(tagDto);
         Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
+    }
+
+    @Test
+    void addExistingTest()
+    {
+        TagDto tagDto = new TagDto("Tag1");
+        tagDto.setTagGroup(new TagGroupDto("TagGroup1"));
+        tagService.add(tagDto);
+        Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
+        Assertions.assertThrows(AlreadyExistException.class, () -> tagService.add(tagDto));
     }
 
     @Test

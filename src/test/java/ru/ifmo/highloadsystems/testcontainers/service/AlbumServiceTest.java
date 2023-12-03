@@ -9,6 +9,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
 import ru.ifmo.highloadsystems.model.dto.*;
 import ru.ifmo.highloadsystems.model.entity.Song;
@@ -60,6 +61,14 @@ public class AlbumServiceTest {
     {
         albumService.addNewAlbum(new AlbumDto("Album1"));
         Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
+    }
+
+    @Test
+    void addExistingTest()
+    {
+        albumService.addNewAlbum(new AlbumDto("Album1"));
+        Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
+        Assertions.assertThrows(AlreadyExistException.class, () -> albumService.addNewAlbum(new AlbumDto("Album1")));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ru.ifmo.highloadsystems.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
@@ -55,19 +56,30 @@ public class TagService {
         }
     }
 
+    @Transactional
     public void addTag(TagDto tagDto) {
         Optional<Tag> optionalTag = tagRepository.findByName(tagDto.getName());
         if (optionalTag.isPresent()) {
             Tag modifiableTag = optionalTag.get();
-            if (!tagDto.getMusicians().isEmpty()) {
+            if (tagDto.getMusicians() != null && !tagDto.getMusicians().isEmpty()) {
                 for (MusicianDto musician : tagDto.getMusicians()) {
                     Optional<Musician> musicianOptional = musicianService.findByName(musician.getName());
-                    musicianOptional.ifPresent(value -> modifiableTag.getMusicians().add(value));
+                    if (musicianOptional.isPresent())
+                        modifiableTag.getMusicians().add(musicianOptional.get());
+                    else {
+                        musicianService.add(musician);
+                        modifiableTag.getMusicians().add(musicianService.findByName(musician.getName()).get());
+                    }
                 }
-            } else if (!tagDto.getSongs().isEmpty()) {
+            } else if (tagDto.getSongs() != null && !tagDto.getSongs().isEmpty()) {
                 for (SongDto song : tagDto.getSongs()) {
                     Optional<Song> songOptional = songService.findByName(song.getName());
-                    songOptional.ifPresent(value -> modifiableTag.getSongs().add(value));
+                    if (songOptional.isPresent())
+                        modifiableTag.getSongs().add(songOptional.get());
+                    else {
+                        songService.add(song);
+                        modifiableTag.getSongs().add(songService.findByName(song.getName()).get());
+                    }
                 }
             } else
                 throw new NothingToAddException("No data to add in message");

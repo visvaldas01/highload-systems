@@ -31,7 +31,6 @@ public class TagController {
     }
 
     @PostMapping("/add_to_tag")
-    @Transactional
     public ResponseEntity<?> addToTag(@RequestBody TagDto tag)
     {
         tagService.addTag(tag);

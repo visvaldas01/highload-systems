@@ -1,20 +1,24 @@
 package ru.ifmo.highloadsystems.service;
 
+import org.hibernate.id.factory.IdentifierGeneratorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.NoPermissionException;
-import ru.ifmo.highloadsystems.model.dto.ScrobbleDto;
+import ru.ifmo.highloadsystems.exception.NotImplemented;
+import ru.ifmo.highloadsystems.model.dto.*;
 import ru.ifmo.highloadsystems.model.entity.Scrobble;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.repository.ScrobbleRepository;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ScrobbleService {
     private final ScrobbleRepository scrobbleRepository;
-
     private final SongService songService;
     private final UserService userService;
     private final MusicianService musicianService;
@@ -34,6 +38,8 @@ public class ScrobbleService {
         return scrobbleRepository.findAll();
     }
 
+    public List<Scrobble> getByUsername(String username) { return scrobbleRepository.findByUserUsername(username); }
+
     public Scrobble save(Scrobble scrobble) {
         return scrobbleRepository.save(scrobble);
     }
@@ -48,11 +54,11 @@ public class ScrobbleService {
                     .name(scrobbleDto.song().getName())
                     .build();
             songService.save(song);
-            return Scrobble.builder()
+            return save(Scrobble.builder()
                     .song(song)
                     .user(userService.findById(authService.getUserFromContext().get().getId()).orElseThrow())
                     .date(scrobbleDto.date())
-                    .build();
+                    .build());
         } else {
             Scrobble scrobble = Scrobble.builder()
                     .song(songService.findByName(scrobbleDto.song().getName()).get())
@@ -60,8 +66,71 @@ public class ScrobbleService {
                     .date(scrobbleDto.date())
                     .build();
             return save(scrobble);
-
         }
-
     }
+
+    public ScrobbleAnswerDto getStatistic(ScrobbleRequestDto requestDto)
+    {
+        String username;
+        if (requestDto.getUsername().isEmpty())
+        {
+            if (authService.getUserFromContext().isEmpty())
+                throw new NoPermissionException("You need to be auth to have you statistic");
+            username = authService.getUserFromContext().get().getUsername();
+        }
+        else
+            username = requestDto.getUsername().get();
+        switch (requestDto.getRequestTarget()) {
+            case "Song": {
+                List<Scrobble> scrobbleList = scrobbleRepository.findAll();
+                Map<String, Integer> listenMap = new HashMap<>();
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                        forEach(scrobble ->
+                                listenMap.put(scrobble.getSong().getName(), listenMap.containsKey(scrobble.getSong().getName()) ?
+                                        listenMap.get(scrobble.getSong().getName()) + 1 : 1));
+                ScrobbleAnswerDto answerDto = new ScrobbleAnswerDto();
+                answerDto.setNums(listenMap.values());
+                answerDto.setNames(listenMap.keySet());
+                return answerDto;
+            }
+            case "Musician": {
+                List<Scrobble> scrobbleList = scrobbleRepository.findAll();
+                Map<String, Integer> listenMap = new HashMap<>();
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                        forEach(scrobble -> scrobble.getSong().getMusicians().forEach(musician -> listenMap.put(musician.getName(),
+                                listenMap.containsKey(musician.getName()) ? listenMap.get(musician.getName()) + 1 : 1)));
+                ScrobbleAnswerDto answerDto = new ScrobbleAnswerDto();
+                answerDto.setNums(listenMap.values());
+                answerDto.setNames(listenMap.keySet());
+                return answerDto;
+            }
+            case "Album": {
+                List<Scrobble> scrobbleList = scrobbleRepository.findAll();
+                Map<String, Integer> listenMap = new HashMap<>();
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                        forEach(scrobble -> scrobble.getSong().getAlbums().forEach(album -> listenMap.put(album.getName(),
+                                listenMap.containsKey(album.getName()) ? listenMap.get(album.getName()) + 1 : 1)));
+                ScrobbleAnswerDto answerDto = new ScrobbleAnswerDto();
+                answerDto.setNums(listenMap.values());
+                answerDto.setNames(listenMap.keySet());
+                return answerDto;
+            }
+            case "Tag": {
+                List<Scrobble> scrobbleList = scrobbleRepository.findAll();
+                Map<String, Integer> listenMap = new HashMap<>();
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                        forEach(scrobble -> scrobble.getSong().getTags().forEach(tag -> listenMap.put(tag.getName(),
+                                listenMap.containsKey(tag.getName()) ? listenMap.get(tag.getName()) + 1 : 1)));
+                ScrobbleAnswerDto answerDto = new ScrobbleAnswerDto();
+                answerDto.setNums(listenMap.values());
+                answerDto.setNames(listenMap.keySet());
+                return answerDto;
+            }
+            default:
+                throw new NotImplemented();
+        }
+    }
+
+    public void deleteAll()
+    { scrobbleRepository.deleteAll(); }
 }

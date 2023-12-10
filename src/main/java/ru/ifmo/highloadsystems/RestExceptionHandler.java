@@ -36,4 +36,9 @@ public class RestExceptionHandler
     protected ResponseEntity<?> alreadyExistHandler(RegisterException ex, WebRequest request) {
         return new ResponseEntity<>(new AppError(HttpStatus.EXPECTATION_FAILED.value(), ex.getMessage()), HttpStatus.EXPECTATION_FAILED);
     }
+
+    @ExceptionHandler(value = { NullPointerException.class })
+    protected ResponseEntity<?> notImplemented(RegisterException ex, WebRequest request) {
+        return new ResponseEntity<>(new AppError(HttpStatus.NOT_IMPLEMENTED.value(), "Feature not implemented"), HttpStatus.NOT_IMPLEMENTED);
+    }
 }

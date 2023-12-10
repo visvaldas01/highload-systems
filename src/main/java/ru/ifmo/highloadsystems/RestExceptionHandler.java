@@ -28,17 +28,17 @@ public class RestExceptionHandler
     }
 
     @ExceptionHandler(value = { NoPermissionException.class })
-    protected ResponseEntity<?> noPermissionHandler(RegisterException ex, WebRequest request) {
+    protected ResponseEntity<?> noPermissionHandler(NoPermissionException ex, WebRequest request) {
         return new ResponseEntity<>(new AppError(HttpStatus.LOCKED.value(), ex.getMessage()), HttpStatus.LOCKED);
     }
 
     @ExceptionHandler(value = { AlreadyExistException.class })
-    protected ResponseEntity<?> alreadyExistHandler(RegisterException ex, WebRequest request) {
+    protected ResponseEntity<?> alreadyExistHandler(AlreadyExistException ex, WebRequest request) {
         return new ResponseEntity<>(new AppError(HttpStatus.EXPECTATION_FAILED.value(), ex.getMessage()), HttpStatus.EXPECTATION_FAILED);
     }
 
     @ExceptionHandler(value = { NullPointerException.class })
-    protected ResponseEntity<?> notImplemented(RegisterException ex, WebRequest request) {
+    protected ResponseEntity<?> notImplemented(NullPointerException ex, WebRequest request) {
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_IMPLEMENTED.value(), "Feature not implemented"), HttpStatus.NOT_IMPLEMENTED);
     }
 }

@@ -38,8 +38,6 @@ public class ScrobbleService {
         return scrobbleRepository.findAll();
     }
 
-    public List<Scrobble> getByUsername(String username) { return scrobbleRepository.findByUserUsername(username); }
-
     public Scrobble save(Scrobble scrobble) {
         return scrobbleRepository.save(scrobble);
     }
@@ -48,22 +46,22 @@ public class ScrobbleService {
     {
         if (authService.getUserFromContext().isEmpty())
             throw new NoPermissionException("Don't have rights to add scrobble");
-        if (songService.findByName(scrobbleDto.song().getName()).isEmpty()) {
+        if (songService.findByName(scrobbleDto.getSong().getName()).isEmpty()) {
             Song song = Song.builder()
-                    .musicians(musicianService.fromDto(scrobbleDto.song().getMusician()))
-                    .name(scrobbleDto.song().getName())
+                    .musicians(musicianService.fromDto(scrobbleDto.getSong().getMusician()))
+                    .name(scrobbleDto.getSong().getName())
                     .build();
             songService.save(song);
             return save(Scrobble.builder()
                     .song(song)
                     .user(userService.findById(authService.getUserFromContext().get().getId()).orElseThrow())
-                    .date(scrobbleDto.date())
+                    .date(scrobbleDto.getDate())
                     .build());
         } else {
             Scrobble scrobble = Scrobble.builder()
-                    .song(songService.findByName(scrobbleDto.song().getName()).get())
+                    .song(songService.findByName(scrobbleDto.getSong().getName()).get())
                     .user(userService.findById(authService.getUserFromContext().get().getId()).orElseThrow())
-                    .date(scrobbleDto.date())
+                    .date(scrobbleDto.getDate())
                     .build();
             return save(scrobble);
         }
@@ -84,7 +82,7 @@ public class ScrobbleService {
             case "Song": {
                 List<Scrobble> scrobbleList = scrobbleRepository.findAll();
                 Map<String, Integer> listenMap = new HashMap<>();
-                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername().equals(username)).
                         forEach(scrobble ->
                                 listenMap.put(scrobble.getSong().getName(), listenMap.containsKey(scrobble.getSong().getName()) ?
                                         listenMap.get(scrobble.getSong().getName()) + 1 : 1));
@@ -96,7 +94,7 @@ public class ScrobbleService {
             case "Musician": {
                 List<Scrobble> scrobbleList = scrobbleRepository.findAll();
                 Map<String, Integer> listenMap = new HashMap<>();
-                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername().equals(username)).
                         forEach(scrobble -> scrobble.getSong().getMusicians().forEach(musician -> listenMap.put(musician.getName(),
                                 listenMap.containsKey(musician.getName()) ? listenMap.get(musician.getName()) + 1 : 1)));
                 ScrobbleAnswerDto answerDto = new ScrobbleAnswerDto();
@@ -107,7 +105,7 @@ public class ScrobbleService {
             case "Album": {
                 List<Scrobble> scrobbleList = scrobbleRepository.findAll();
                 Map<String, Integer> listenMap = new HashMap<>();
-                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername().equals(username)).
                         forEach(scrobble -> scrobble.getSong().getAlbums().forEach(album -> listenMap.put(album.getName(),
                                 listenMap.containsKey(album.getName()) ? listenMap.get(album.getName()) + 1 : 1)));
                 ScrobbleAnswerDto answerDto = new ScrobbleAnswerDto();
@@ -118,7 +116,7 @@ public class ScrobbleService {
             case "Tag": {
                 List<Scrobble> scrobbleList = scrobbleRepository.findAll();
                 Map<String, Integer> listenMap = new HashMap<>();
-                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername() == username).
+                scrobbleList.stream().filter(scrobble -> scrobble.getUser().getUsername().equals(username)).
                         forEach(scrobble -> scrobble.getSong().getTags().forEach(tag -> listenMap.put(tag.getName(),
                                 listenMap.containsKey(tag.getName()) ? listenMap.get(tag.getName()) + 1 : 1)));
                 ScrobbleAnswerDto answerDto = new ScrobbleAnswerDto();

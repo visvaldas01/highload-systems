@@ -55,15 +55,19 @@ public class MusicianServiceTest {
     @Test
     void addTest()
     {
-        musicianService.add(new MusicianDto("Musician1"));
+        MusicianDto musicianDto = new MusicianDto();
+        musicianDto.setName("Musician1");
+        musicianService.add(musicianDto);
         Assertions.assertFalse(musicianService.findByName("Musician1").isEmpty());
     }
 
     @Test
     void addExistingTest()
     {
-        musicianService.add(new MusicianDto("Musician1"));
+        MusicianDto musicianDto = new MusicianDto();
+        musicianDto.setName("Musician1");
+        musicianService.add(musicianDto);
         Assertions.assertFalse(musicianService.findByName("Musician1").isEmpty());
-        Assertions.assertThrows(AlreadyExistException.class, () -> musicianService.add(new MusicianDto("Musician1")));
+        Assertions.assertThrows(AlreadyExistException.class, () -> musicianService.add(musicianDto));
     }
 }

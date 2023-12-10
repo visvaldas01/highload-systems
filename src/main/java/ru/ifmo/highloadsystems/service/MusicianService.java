@@ -43,6 +43,8 @@ public class MusicianService {
 
     public Collection<Musician> fromDto(Collection<MusicianDto> dto)
     {
+        if (dto == null)
+            return null;
         Collection<Musician> list = new ArrayList<>();
         for (MusicianDto mus: dto) {
             Optional<Musician> optionalMusician = findByName(mus.getName());

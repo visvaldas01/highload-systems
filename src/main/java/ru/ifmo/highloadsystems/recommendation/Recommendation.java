@@ -51,6 +51,11 @@ public class Recommendation {
                             MaxV2 + dt,
                             MinV3 - dt,
                             MaxV3 + dt);
+            if (possibleSongs.isEmpty())
+            {
+                List<Song> allSongs = songRepository.findAll();
+                return allSongs.get(0);
+            }
             for (Song s: possibleSongs) {
                 if (history.contains(s))
                     continue;

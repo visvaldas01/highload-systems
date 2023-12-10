@@ -41,14 +41,18 @@ public class TagGroupServiceTest {
     @Test
     void addTest()
     {
-        tagGroupService.add(new TagGroupDto("TagGroup1"));
+        TagGroupDto tagGroupDto = new TagGroupDto();
+        tagGroupDto.setName("TagGroup1");
+        tagGroupService.add(tagGroupDto);
         Assertions.assertTrue(tagGroupService.findByName("TagGroup1").isPresent());
     }
 
     @Test
     void addExistingTest()
     {
-        tagGroupService.add(new TagGroupDto("TagGroup1"));
-        Assertions.assertThrows(AlreadyExistException.class, () -> tagGroupService.add(new TagGroupDto("TagGroup1")));
+        TagGroupDto tagGroupDto = new TagGroupDto();
+        tagGroupDto.setName("TagGroup1");
+        tagGroupService.add(tagGroupDto);
+        Assertions.assertThrows(AlreadyExistException.class, () -> tagGroupService.add(tagGroupDto));
     }
 }

@@ -1,5 +1,6 @@
 package ru.ifmo.highloadsystems.model.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -9,8 +10,8 @@ import java.util.Optional;
 @Data
 public class ScrobbleRequestDto {
     Optional<String> username;
-    @NonNull
+    @NotNull
     String requestTarget;
-    @NonNull
+    @NotNull
     int size;
 }

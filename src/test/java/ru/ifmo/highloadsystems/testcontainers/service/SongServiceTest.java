@@ -55,26 +55,35 @@ public class SongServiceTest {
     @Test
     void addTest()
     {
-        songService.add(new SongDto("Song1"));
+        SongDto songDto1 = new SongDto();
+        songDto1.setName("Song1");
+        songService.add(songDto1);
         Assertions.assertFalse(songService.findByName("Song1").isEmpty());
     }
 
     @Test
     void addExistingTest()
     {
-        songService.add(new SongDto("Song1"));
+        SongDto songDto1 = new SongDto();
+        songDto1.setName("Song1");
+        songService.add(songDto1);
         Assertions.assertFalse(songService.findByName("Song1").isEmpty());
-        Assertions.assertThrows(AlreadyExistException.class, () -> songService.add(new SongDto("Song1")));
+        Assertions.assertThrows(AlreadyExistException.class, () -> songService.add(songDto1));
     }
 
     @Test
     void addMusicianToSongTest()
     {
-        SongDto songDto = new SongDto("Song1");
+        SongDto songDto = new SongDto();
+        songDto.setName("Song1");
         songService.add(songDto);
         Collection<MusicianDto> musicianDtoCollection = new ArrayList<MusicianDto>();
-        musicianDtoCollection.add(new MusicianDto("Musician1"));
-        musicianDtoCollection.add(new MusicianDto("Musician2"));
+        MusicianDto musicianDto1 = new MusicianDto();
+        musicianDto1.setName("Musician1");
+        MusicianDto musicianDto2 = new MusicianDto();
+        musicianDto2.setName("Musician2");
+        musicianDtoCollection.add(musicianDto1);
+        musicianDtoCollection.add(musicianDto2);
         songDto.setMusician(musicianDtoCollection);
         songService.addTo(songDto);
         Assertions.assertFalse(songService.findByName("Song1").isEmpty());
@@ -86,7 +95,8 @@ public class SongServiceTest {
     @Test
     void nowhereToAddTest()
     {
-        SongDto songDto = new SongDto("Song1");
+        SongDto songDto = new SongDto();
+        songDto.setName("Song1");
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->songService.addTo(songDto));
         Assertions.assertEquals("Song not existing", ex.getMessage());
     }
@@ -94,7 +104,8 @@ public class SongServiceTest {
     @Test
     void nothingToAddTest()
     {
-        SongDto songDto = new SongDto("Song1");
+        SongDto songDto = new SongDto();
+        songDto.setName("Song1");
         songService.add(songDto);
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->songService.addTo(songDto));
         Assertions.assertEquals("No data to add in song", ex.getMessage());

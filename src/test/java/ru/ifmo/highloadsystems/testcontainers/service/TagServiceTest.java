@@ -55,8 +55,11 @@ public class TagServiceTest {
     @Test
     void addTest()
     {
-        TagDto tagDto = new TagDto("Tag1");
-        tagDto.setTagGroup(new TagGroupDto("TagGroup1"));
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Tag1");
+        TagGroupDto tagGroupDto = new TagGroupDto();
+        tagGroupDto.setName("TagGroup1");
+        tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
         Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
     }
@@ -64,8 +67,11 @@ public class TagServiceTest {
     @Test
     void addExistingTest()
     {
-        TagDto tagDto = new TagDto("Tag1");
-        tagDto.setTagGroup(new TagGroupDto("TagGroup1"));
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Tag1");
+        TagGroupDto tagGroupDto = new TagGroupDto();
+        tagGroupDto.setName("TagGroup1");
+        tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
         Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
         Assertions.assertThrows(AlreadyExistException.class, () -> tagService.add(tagDto));
@@ -74,12 +80,19 @@ public class TagServiceTest {
     @Test
     void addSongToTagTest()
     {
-        TagDto tagDto = new TagDto("Tag1");
-        tagDto.setTagGroup(new TagGroupDto("TagGroup1"));
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Tag1");
+        TagGroupDto tagGroupDto = new TagGroupDto();
+        tagGroupDto.setName("TagGroup1");
+        tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
         Collection<SongDto> songDtoCollection = new ArrayList<SongDto>();
-        songDtoCollection.add(new SongDto("Song1"));
-        songDtoCollection.add(new SongDto("Song2"));
+        SongDto song1 = new SongDto();
+        song1.setName("Song1");
+        SongDto song2 = new SongDto();
+        song2.setName("Song2");
+        songDtoCollection.add(song1);
+        songDtoCollection.add(song2);
         tagDto.setSongs(songDtoCollection);
         tagService.addTag(tagDto);
         Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
@@ -91,12 +104,19 @@ public class TagServiceTest {
     @Test
     void addMusicianToTagTest()
     {
-        TagDto tagDto = new TagDto("Tag1");
-        tagDto.setTagGroup(new TagGroupDto("TagGroup1"));
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Tag1");
+        TagGroupDto tagGroupDto = new TagGroupDto();
+        tagGroupDto.setName("TagGroup1");
+        tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
         Collection<MusicianDto> musicianDtoCollection = new ArrayList<MusicianDto>();
-        musicianDtoCollection.add(new MusicianDto("Musician1"));
-        musicianDtoCollection.add(new MusicianDto("Musician2"));
+        MusicianDto musicianDto1 = new MusicianDto();
+        musicianDto1.setName("Musician1");
+        MusicianDto musicianDto2 = new MusicianDto();
+        musicianDto2.setName("Musician2");
+        musicianDtoCollection.add(musicianDto1);
+        musicianDtoCollection.add(musicianDto2);
         tagDto.setMusicians(musicianDtoCollection);
         tagService.addTag(tagDto);
         Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
@@ -108,7 +128,8 @@ public class TagServiceTest {
     @Test
     void nowhereToAddTest()
     {
-        TagDto tagDto = new TagDto("Tag1");
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Tag1");
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->tagService.addTag(tagDto));
         Assertions.assertEquals("Tag not existing", ex.getMessage());
     }
@@ -116,8 +137,11 @@ public class TagServiceTest {
     @Test
     void nothingToAddTest()
     {
-        TagDto tagDto = new TagDto("Tag1");
-        tagDto.setTagGroup(new TagGroupDto("TagGroup1"));
+        TagDto tagDto = new TagDto();
+        tagDto.setName("Tag1");
+        TagGroupDto tagGroupDto = new TagGroupDto();
+        tagGroupDto.setName("TagGroup1");
+        tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->tagService.addTag(tagDto));
         Assertions.assertEquals("No data to add in message", ex.getMessage());

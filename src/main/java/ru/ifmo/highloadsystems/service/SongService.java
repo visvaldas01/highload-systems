@@ -59,6 +59,9 @@ public class SongService {
         {
             Song song = new Song();
             song.setName(dto.getName());
+            song.setVector1((float)1.0);
+            song.setVector2((float)1.0);
+            song.setVector3((float)1.0);
             songRepository.save(song);
         }
     }

@@ -59,26 +59,35 @@ public class AlbumServiceTest {
     @Test
     void addTest()
     {
-        albumService.addNewAlbum(new AlbumDto("Album1"));
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setName("Album1");
+        albumService.addNewAlbum(albumDto);
         Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
     }
 
     @Test
     void addExistingTest()
     {
-        albumService.addNewAlbum(new AlbumDto("Album1"));
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setName("Album1");
+        albumService.addNewAlbum(albumDto);
         Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
-        Assertions.assertThrows(AlreadyExistException.class, () -> albumService.addNewAlbum(new AlbumDto("Album1")));
+        Assertions.assertThrows(AlreadyExistException.class, () -> albumService.addNewAlbum(albumDto));
     }
 
     @Test
     void addSongToAlbumTest()
     {
-        AlbumDto albumDto = new AlbumDto("Album1");
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
         Collection<SongDto> songDtoCollection = new ArrayList<SongDto>();
-        songDtoCollection.add(new SongDto("Song1"));
-        songDtoCollection.add(new SongDto("Song2"));
+        SongDto songDto1 = new SongDto();
+        songDto1.setName("Song1");
+        SongDto songDto2 = new SongDto();
+        songDto2.setName("Song2");
+        songDtoCollection.add(songDto1);
+        songDtoCollection.add(songDto2);
         albumDto.setSongs(songDtoCollection);
         albumService.addToAlbum(albumDto);
         Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
@@ -90,14 +99,21 @@ public class AlbumServiceTest {
     @Test
     void addTagToAlbumTest()
     {
-        AlbumDto albumDto = new AlbumDto("Album1");
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
         Collection<TagDto> tagDtoCollection = new ArrayList<TagDto>();
-        TagDto tag1 = new TagDto("Tag1");
-        tag1.setTagGroup(new TagGroupDto("Tag1Group"));
+        TagDto tag1 = new TagDto();
+        tag1.setName("Tag1");
+        TagGroupDto tagGroupDto1 = new TagGroupDto();
+        tagGroupDto1.setName("Tag1Group");
+        tag1.setTagGroup(tagGroupDto1);
         tagDtoCollection.add(tag1);
-        TagDto tag2 = new TagDto("Tag2");
-        tag2.setTagGroup(new TagGroupDto("Tag2Group"));
+        TagDto tag2 = new TagDto();
+        tag2.setName("Tag2");
+        TagGroupDto tagGroupDto2 = new TagGroupDto();
+        tagGroupDto2.setName("Tag2Group");
+        tag2.setTagGroup(tagGroupDto2);
         tagDtoCollection.add(tag2);
         albumDto.setTags(tagDtoCollection);
         albumService.addToAlbum(albumDto);
@@ -110,11 +126,16 @@ public class AlbumServiceTest {
     @Test
     void addMusicianToAlbumTest()
     {
-        AlbumDto albumDto = new AlbumDto("Album1");
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
         Collection<MusicianDto> musicianDtoCollection = new ArrayList<MusicianDto>();
-        musicianDtoCollection.add(new MusicianDto("Musician1"));
-        musicianDtoCollection.add(new MusicianDto("Musician2"));
+        MusicianDto musicianDto1 = new MusicianDto();
+        musicianDto1.setName("Musician1");
+        MusicianDto musicianDto2 = new MusicianDto();
+        musicianDto2.setName("Musician2");
+        musicianDtoCollection.add(musicianDto1);
+        musicianDtoCollection.add(musicianDto2);
         albumDto.setMusicians(musicianDtoCollection);
         albumService.addToAlbum(albumDto);
         Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
@@ -126,7 +147,8 @@ public class AlbumServiceTest {
     @Test
     void nowhereToAddTest()
     {
-        AlbumDto albumDto = new AlbumDto("Album1");
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setName("Album1");
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->albumService.addToAlbum(albumDto));
         Assertions.assertEquals("Album not existing", ex.getMessage());
     }
@@ -134,7 +156,8 @@ public class AlbumServiceTest {
     @Test
     void nothingToAddTest()
     {
-        AlbumDto albumDto = new AlbumDto("Album1");
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->albumService.addToAlbum(albumDto));
         Assertions.assertEquals("No data to add in message", ex.getMessage());

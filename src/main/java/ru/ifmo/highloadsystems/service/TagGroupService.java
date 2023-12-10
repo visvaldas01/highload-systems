@@ -29,13 +29,13 @@ public class TagGroupService {
 
     public void add(TagGroupDto dto)
     {
-        Optional<TagGroup> optionalTagGroup = tagGroupRepository.findByName(dto.name());
+        Optional<TagGroup> optionalTagGroup = tagGroupRepository.findByName(dto.getName());
         if (optionalTagGroup.isPresent())
             throw new AlreadyExistException("Song already exist");
         else
         {
             TagGroup tagGroup = new TagGroup();
-            tagGroup.setName(dto.name());
+            tagGroup.setName(dto.getName());
             tagGroupRepository.save(tagGroup);
         }
     }

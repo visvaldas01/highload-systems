@@ -44,13 +44,13 @@ public class TagService {
         {
             Tag tag = new Tag();
             tag.setName(dto.getName());
-            Optional<TagGroup> tagGroup = tagGroupService.findByName(dto.getTagGroup().name()) ;
+            Optional<TagGroup> tagGroup = tagGroupService.findByName(dto.getTagGroup().getName()) ;
             if (tagGroup.isPresent())
                 tag.setTagGroup(tagGroup.get());
             else
             {
                 tagGroupService.add(dto.getTagGroup());
-                tag.setTagGroup(tagGroupService.findByName(dto.getTagGroup().name()).get());
+                tag.setTagGroup(tagGroupService.findByName(dto.getTagGroup().getName()).get());
             }
             tagRepository.save(tag);
         }

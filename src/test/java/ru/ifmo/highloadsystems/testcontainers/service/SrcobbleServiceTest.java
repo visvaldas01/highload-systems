@@ -57,7 +57,11 @@ public class SrcobbleServiceTest {
     @Test
     void addNotPermissionTest()
     {
-        ScrobbleDto scrobbleDto = new ScrobbleDto(new SongDto("Song1"), LocalDateTime.now());
+        SongDto songDto = new SongDto();
+        songDto.setName("Song1");
+        ScrobbleDto scrobbleDto = new ScrobbleDto();
+        scrobbleDto.setSong(songDto);
+        scrobbleDto.setDate(LocalDateTime.now());
         Assertions.assertThrows(NullPointerException.class,() -> scrobbleService.addScrobble(scrobbleDto));
     }
 }

@@ -2,6 +2,7 @@ package ru.ifmo.highloadsystems.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.ScrobbleAnswerDto;
@@ -31,6 +32,7 @@ public class ScrobbleController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Scrobble> addScrobble(@RequestBody ScrobbleDto scrobbleDto) {
         return ResponseEntity.ok(scrobbleService.addScrobble(scrobbleDto));
     }

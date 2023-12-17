@@ -2,6 +2,7 @@ package ru.ifmo.highloadsystems.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.TagDto;
@@ -23,7 +24,8 @@ public class TagController {
     public ResponseEntity<List<Tag>> getAll()
     { return ResponseEntity.ok(tagService.getAll()); }
 
-    @PostMapping
+    @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addTag(@RequestBody TagDto dto)
     {
         tagService.add(dto);
@@ -31,6 +33,7 @@ public class TagController {
     }
 
     @PostMapping("/add_to_tag")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addToTag(@RequestBody TagDto tag)
     {
         tagService.addTag(tag);

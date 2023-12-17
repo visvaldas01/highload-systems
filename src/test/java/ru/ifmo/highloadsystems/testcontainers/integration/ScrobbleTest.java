@@ -71,7 +71,7 @@ public class ScrobbleTest {
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"date\": \"2023-11-14T16:56:30.515092\", \"song\": {\"name\": \"Rooster\"}}")
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(423));
+                .andExpect(status().is(401));
     }
 
     @Test

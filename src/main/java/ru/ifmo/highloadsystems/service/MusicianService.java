@@ -43,15 +43,14 @@ public class MusicianService {
     public Collection<Musician> fromDto(Collection<MusicianDto> dto) {
         if (dto == null) return null;
         Collection<Musician> list = new ArrayList<>();
-        for (MusicianDto mus : dto) {
-            Optional<Musician> optionalMusician = findByName(mus.getName());
+        for (MusicianDto musician : dto) {
+            Optional<Musician> optionalMusician = findByName(musician.getName());
             if (optionalMusician.isPresent()) {
                 list.add(optionalMusician.get());
             } else {
                 Musician tmpMus = new Musician();
-                tmpMus.setName(mus.getName());
-                list.add(tmpMus);
-                musicianRepository.save(tmpMus);
+                tmpMus.setName(musician.getName());
+                list.add(musicianRepository.save(tmpMus));
             }
         }
         return list;

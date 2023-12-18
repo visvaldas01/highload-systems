@@ -15,6 +15,8 @@ import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.repository.AlbumRepository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,5 +93,21 @@ public class AlbumService {
 
     public void deleteAll() {
         albumRepository.deleteAll();
+    }
+
+    public Collection<Album> fromDto(Collection<AlbumDto> dto) {
+        if (dto == null) return null;
+        Collection<Album> list = new ArrayList<>();
+        for (AlbumDto album : dto) {
+            Optional<Album> optionalAlbum = findByName(album.getName());
+            if (optionalAlbum.isPresent()) {
+                list.add(optionalAlbum.get());
+            } else {
+                Album tmpAlbum = new Album();
+                tmpAlbum.setName(album.getName());
+                list.add(albumRepository.save(tmpAlbum));
+            }
+        }
+        return list;
     }
 }

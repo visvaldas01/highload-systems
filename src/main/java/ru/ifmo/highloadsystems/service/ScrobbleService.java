@@ -23,15 +23,19 @@ public class ScrobbleService {
     private final UserService userService;
     private final MusicianService musicianService;
     private final AuthService authService;
+    private final AlbumService albumService;
+    private final TagService tagService;
 
 
     @Autowired
-    public ScrobbleService(ScrobbleRepository scrobbleRepository, SongService songService, UserService userService, MusicianService musicianService, AuthService authService) {
+    public ScrobbleService(ScrobbleRepository scrobbleRepository, SongService songService, UserService userService, MusicianService musicianService, AuthService authService, AlbumService albumService, TagService tagService) {
         this.scrobbleRepository = scrobbleRepository;
         this.songService = songService;
         this.userService = userService;
         this.musicianService = musicianService;
         this.authService = authService;
+        this.albumService = albumService;
+        this.tagService = tagService;
     }
 
     public List<Scrobble> getAll() {
@@ -49,6 +53,8 @@ public class ScrobbleService {
         if (songService.findByName(scrobbleDto.getSong().getName()).isEmpty()) {
             Song song = Song.builder()
                     .musicians(musicianService.fromDto(scrobbleDto.getSong().getMusician()))
+                    .albums(albumService.fromDto(scrobbleDto.getSong().getAlbum()))
+                    .tags(tagService.fromDto(scrobbleDto.getSong().getTag()))
                     .name(scrobbleDto.getSong().getName())
                     .build();
             songService.save(song);

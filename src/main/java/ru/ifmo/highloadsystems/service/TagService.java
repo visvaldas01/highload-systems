@@ -14,6 +14,8 @@ import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.model.entity.TagGroup;
 import ru.ifmo.highloadsystems.repository.TagRepository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,6 +80,29 @@ public class TagService {
                 }
             } else throw new NothingToAddException("No data to add in message");
         } else throw new NothingToAddException("This tag does not exist");
+    }
+
+    public Collection<Tag> fromDto(Collection<TagDto> dto) {
+        if (dto == null) return null;
+        Collection<Tag> list = new ArrayList<>();
+        for (TagDto tag : dto) {
+            Optional<Tag> optionalTag = findByName(tag.getName());
+            if (optionalTag.isPresent()) {
+                list.add(optionalTag.get());
+            } else {
+                Tag tmpTag = new Tag();
+                tmpTag.setName(tag.getName());
+                Optional<TagGroup> optionalTagGroup = tagGroupService.findByName(tag.getTagGroup().getName());
+                if (optionalTagGroup.isPresent())
+                    tmpTag.setTagGroup(optionalTagGroup.get());
+                else {
+                    tagGroupService.add(tag.getTagGroup());
+                    tmpTag.setTagGroup(tagGroupService.findByName(tag.getTagGroup().getName()).get());
+                }
+                list.add(tagRepository.save(tmpTag));
+            }
+        }
+        return list;
     }
 
     public Optional<Tag> findByName(String name) {

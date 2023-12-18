@@ -15,5 +15,5 @@ public class TagDto {
 
     Collection<MusicianDto> musicians;
 
-    TagGroupDto tagGroup;
+    @NotNull TagGroupDto tagGroup;
 }

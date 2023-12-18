@@ -11,4 +11,5 @@ public class SongDto {
     String name;
     Collection<MusicianDto> musician;
     Collection<AlbumDto> album;
+    Collection<TagDto> tag;
 }

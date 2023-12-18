@@ -36,6 +36,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<?> nullPointer() {
+        return new ResponseEntity<>(new AppError(HttpStatus.NOT_IMPLEMENTED.value(), "Feature not implemented"), HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @ExceptionHandler(value = {NotImplemented.class})
     protected ResponseEntity<?> notImplemented() {
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_IMPLEMENTED.value(), "Feature not implemented"), HttpStatus.NOT_IMPLEMENTED);
     }

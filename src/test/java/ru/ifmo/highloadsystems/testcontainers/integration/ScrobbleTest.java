@@ -51,9 +51,8 @@ public class ScrobbleTest {
                 .andExpect(status().isOk()).andReturn();
 
         JSONObject object = new JSONObject(result.getResponse().getContentAsString());
-        String authToken = object.getString("token");
 
-        return authToken;
+        return object.getString("token");
     }
 
     @Test

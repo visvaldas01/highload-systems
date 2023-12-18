@@ -1,6 +1,5 @@
 package ru.ifmo.highloadsystems.testcontainers.integration;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,13 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -39,21 +37,16 @@ public class AuthTest {
         postgreSQLContainer.stop();
     }
 
-    String auth(String username) throws Exception {
+    void auth(String username) throws Exception {
         mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"username\": \"" + username + "\", \"password\": \"1234\", \"confirmPassword\": \"1234\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        MvcResult result = mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"username\": \"" + username + "\", \"password\": \"1234\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
-
-        JSONObject object = new JSONObject(result.getResponse().getContentAsString());
-        String authToken = object.getString("token");
-
-        return authToken;
     }
 
     @Test

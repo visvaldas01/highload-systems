@@ -14,19 +14,20 @@ import java.util.List;
 @RequestMapping("/tagGroups")
 public class TagGroupController {
     private final TagGroupService tagGroupService;
+
     @Autowired
     public TagGroupController(TagGroupService tagGroupService) {
         this.tagGroupService = tagGroupService;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<TagGroup>> getAll()
-    { return ResponseEntity.ok(tagGroupService.getAll()); }
+    public ResponseEntity<List<TagGroup>> getAll() {
+        return ResponseEntity.ok(tagGroupService.getAll());
+    }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> add(@RequestBody TagGroupDto dto)
-    {
+    public ResponseEntity<?> add(@RequestBody TagGroupDto dto) {
         tagGroupService.add(dto);
         return ResponseEntity.ok().build();
     }

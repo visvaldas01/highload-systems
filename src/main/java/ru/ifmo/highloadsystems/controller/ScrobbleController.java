@@ -11,8 +11,6 @@ import ru.ifmo.highloadsystems.model.dto.ScrobbleRequestDto;
 import ru.ifmo.highloadsystems.model.entity.Scrobble;
 import ru.ifmo.highloadsystems.service.ScrobbleService;
 
-import jakarta.validation.Valid;
-
 import java.util.List;
 
 @RestController
@@ -38,8 +36,7 @@ public class ScrobbleController {
     }
 
     @GetMapping("/get_stat")
-    public ResponseEntity<ScrobbleAnswerDto> getStat(@RequestBody ScrobbleRequestDto scrobbleRequestDto)
-    {
+    public ResponseEntity<ScrobbleAnswerDto> getStat(@RequestBody ScrobbleRequestDto scrobbleRequestDto) {
         return ResponseEntity.ok(scrobbleService.getStatistic(scrobbleRequestDto));
     }
 }

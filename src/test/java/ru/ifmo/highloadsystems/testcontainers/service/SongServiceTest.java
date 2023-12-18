@@ -18,7 +18,7 @@ import ru.ifmo.highloadsystems.service.TagService;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
 public class SongServiceTest {
     @Autowired
@@ -53,8 +53,7 @@ public class SongServiceTest {
     }
 
     @Test
-    void addTest()
-    {
+    void addTest() {
         SongDto songDto1 = new SongDto();
         songDto1.setName("Song1");
         songService.add(songDto1);
@@ -62,8 +61,7 @@ public class SongServiceTest {
     }
 
     @Test
-    void addExistingTest()
-    {
+    void addExistingTest() {
         SongDto songDto1 = new SongDto();
         songDto1.setName("Song1");
         songService.add(songDto1);
@@ -72,12 +70,11 @@ public class SongServiceTest {
     }
 
     @Test
-    void addMusicianToSongTest()
-    {
+    void addMusicianToSongTest() {
         SongDto songDto = new SongDto();
         songDto.setName("Song1");
         songService.add(songDto);
-        Collection<MusicianDto> musicianDtoCollection = new ArrayList<MusicianDto>();
+        Collection<MusicianDto> musicianDtoCollection = new ArrayList<>();
         MusicianDto musicianDto1 = new MusicianDto();
         musicianDto1.setName("Musician1");
         MusicianDto musicianDto2 = new MusicianDto();
@@ -93,21 +90,19 @@ public class SongServiceTest {
     }
 
     @Test
-    void nowhereToAddTest()
-    {
+    void nowhereToAddTest() {
         SongDto songDto = new SongDto();
         songDto.setName("Song1");
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->songService.addTo(songDto));
-        Assertions.assertEquals("Song not existing", ex.getMessage());
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> songService.addTo(songDto));
+        Assertions.assertEquals("Song does not exist", ex.getMessage());
     }
 
     @Test
-    void nothingToAddTest()
-    {
+    void nothingToAddTest() {
         SongDto songDto = new SongDto();
         songDto.setName("Song1");
         songService.add(songDto);
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->songService.addTo(songDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> songService.addTo(songDto));
         Assertions.assertEquals("No data to add in song", ex.getMessage());
     }
 }

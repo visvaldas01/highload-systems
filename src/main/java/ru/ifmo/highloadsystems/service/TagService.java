@@ -1,15 +1,17 @@
 package ru.ifmo.highloadsystems.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
-import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.dto.SongDto;
 import ru.ifmo.highloadsystems.model.dto.TagDto;
-import ru.ifmo.highloadsystems.model.entity.*;
+import ru.ifmo.highloadsystems.model.entity.Musician;
+import ru.ifmo.highloadsystems.model.entity.Song;
+import ru.ifmo.highloadsystems.model.entity.Tag;
+import ru.ifmo.highloadsystems.model.entity.TagGroup;
 import ru.ifmo.highloadsystems.repository.TagRepository;
 
 import java.util.List;
@@ -35,22 +37,17 @@ public class TagService {
         return tagRepository.findAll();
     }
 
-    public void add(TagDto dto)
-    {
+    public void add(TagDto dto) {
         Optional<Tag> optionalTag = tagRepository.findByName(dto.getName());
-        if (optionalTag.isPresent())
-            throw new AlreadyExistException("Tag already exist");
-        else
-        {
+        if (optionalTag.isPresent()) throw new AlreadyExistException("This tag already exists");
+        else {
             Tag tag = new Tag();
             tag.setName(dto.getName());
-            Optional<TagGroup> tagGroup = tagGroupService.findByName(dto.getTagGroup().getName()) ;
-            if (tagGroup.isPresent())
-                tag.setTagGroup(tagGroup.get());
-            else
-            {
+            Optional<TagGroup> tagGroup = tagGroupService.findByName(dto.getTagGroup().getName());
+            if (tagGroup.isPresent()) tag.setTagGroup(tagGroup.get());
+            else {
                 tagGroupService.add(dto.getTagGroup());
-                tag.setTagGroup(tagGroupService.findByName(dto.getTagGroup().getName()).get());
+                tag.setTagGroup(tagGroupService.findByName(dto.getTagGroup().getName()).orElseThrow());
             }
             tagRepository.save(tag);
         }
@@ -64,31 +61,30 @@ public class TagService {
             if (tagDto.getMusicians() != null && !tagDto.getMusicians().isEmpty()) {
                 for (MusicianDto musician : tagDto.getMusicians()) {
                     Optional<Musician> musicianOptional = musicianService.findByName(musician.getName());
-                    if (musicianOptional.isPresent())
-                        modifiableTag.getMusicians().add(musicianOptional.get());
+                    if (musicianOptional.isPresent()) modifiableTag.getMusicians().add(musicianOptional.get());
                     else {
                         musicianService.add(musician);
-                        modifiableTag.getMusicians().add(musicianService.findByName(musician.getName()).get());
+                        modifiableTag.getMusicians().add(musicianService.findByName(musician.getName()).orElseThrow());
                     }
                 }
             } else if (tagDto.getSongs() != null && !tagDto.getSongs().isEmpty()) {
                 for (SongDto song : tagDto.getSongs()) {
                     Optional<Song> songOptional = songService.findByName(song.getName());
-                    if (songOptional.isPresent())
-                        modifiableTag.getSongs().add(songOptional.get());
+                    if (songOptional.isPresent()) modifiableTag.getSongs().add(songOptional.get());
                     else {
                         songService.add(song);
-                        modifiableTag.getSongs().add(songService.findByName(song.getName()).get());
+                        modifiableTag.getSongs().add(songService.findByName(song.getName()).orElseThrow());
                     }
                 }
-            } else
-                throw new NothingToAddException("No data to add in message");
-        } else throw new NothingToAddException("Tag not existing");
+            } else throw new NothingToAddException("No data to add in message");
+        } else throw new NothingToAddException("This tag does not exist");
     }
 
-    public Optional<Tag> findByName(String name)
-    { return tagRepository.findByName(name); }
+    public Optional<Tag> findByName(String name) {
+        return tagRepository.findByName(name);
+    }
 
-    public void deleteAll()
-    { tagRepository.deleteAll(); }
+    public void deleteAll() {
+        tagRepository.deleteAll();
+    }
 }

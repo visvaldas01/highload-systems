@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.dto.SongDto;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.service.SongService;
@@ -14,6 +13,7 @@ import ru.ifmo.highloadsystems.service.SongService;
 @RequestMapping("/songs")
 public class SongController {
     private final SongService songService;
+
     @Autowired
     public SongController(SongService songService) {
         this.songService = songService;
@@ -26,20 +26,19 @@ public class SongController {
     { return ResponseEntity.ok(songService.getAll(PageRequest.of(offset, limit))); }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody SongDto songDto)
-    {
+    public ResponseEntity<?> add(@RequestBody SongDto songDto) {
         songService.add(songDto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/add_to")
-    public ResponseEntity<?> addTo(@RequestBody SongDto songDto)
-    {
+    public ResponseEntity<?> addTo(@RequestBody SongDto songDto) {
         songService.addTo(songDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity<?> recommend()
-    { return ResponseEntity.ok(songService.recommend()); }
+    public ResponseEntity<?> recommend() {
+        return ResponseEntity.ok(songService.recommend());
+    }
 }

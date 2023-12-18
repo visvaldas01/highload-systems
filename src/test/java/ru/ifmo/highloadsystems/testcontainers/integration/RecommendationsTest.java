@@ -41,26 +41,25 @@ public class RecommendationsTest {
         postgreSQLContainer.stop();
     }
 
-    String auth(String username) throws Exception {
+    String auth() throws Exception {
         mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"username\": \"" + username + "\", \"password\": \"1234\", \"confirmPassword\": \"1234\" }")
+                        .content("{ \"username\": \"" + "user1" + "\", \"password\": \"1234\", \"confirmPassword\": \"1234\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         MvcResult result = mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"username\": \"" + username + "\", \"password\": \"1234\" }")
+                        .content("{ \"username\": \"" + "user1" + "\", \"password\": \"1234\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
         JSONObject object = new JSONObject(result.getResponse().getContentAsString());
-        String authToken = object.getString("token");
 
-        return authToken;
+        return object.getString("token");
     }
 
     @Test
     void recommendTest() throws Exception {
-        String jwt = auth("user1");
+        String jwt = auth();
 
         mockMvc.perform(post("/songs/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)

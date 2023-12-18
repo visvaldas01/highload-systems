@@ -7,17 +7,14 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.ifmo.highloadsystems.exception.AlreadyExistException;
-import ru.ifmo.highloadsystems.exception.NoPermissionException;
 import ru.ifmo.highloadsystems.model.dto.*;
 import ru.ifmo.highloadsystems.service.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
-public class SrcobbleServiceTest {
+public class ScrobbleServiceTest {
     @Autowired
     private AlbumService albumService;
     @Autowired
@@ -28,8 +25,6 @@ public class SrcobbleServiceTest {
     private MusicianService musicianService;
     @Autowired
     private ScrobbleService scrobbleService;
-    @Autowired
-    private AuthService authService;
 
     @Container
     @ServiceConnection
@@ -55,13 +50,12 @@ public class SrcobbleServiceTest {
     }
 
     @Test
-    void addNotPermissionTest()
-    {
+    void addNotPermissionTest() {
         SongDto songDto = new SongDto();
         songDto.setName("Song1");
         ScrobbleDto scrobbleDto = new ScrobbleDto();
         scrobbleDto.setSong(songDto);
         scrobbleDto.setDate(LocalDateTime.now());
-        Assertions.assertThrows(NullPointerException.class,() -> scrobbleService.addScrobble(scrobbleDto));
+        Assertions.assertThrows(NullPointerException.class, () -> scrobbleService.addScrobble(scrobbleDto));
     }
 }

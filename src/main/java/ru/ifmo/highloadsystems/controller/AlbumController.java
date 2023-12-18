@@ -21,18 +21,20 @@ public class AlbumController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Album>> getAll()
-    { return ResponseEntity.ok(albumService.getAll()); }
+    public ResponseEntity<List<Album>> getAll() {
+        return ResponseEntity.ok(albumService.getAll());
+    }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> addAlbum(@RequestBody AlbumDto album)
-    { return ResponseEntity.ok(albumService.addNewAlbum(album)); }
+    public ResponseEntity<?> addAlbum(@RequestBody AlbumDto album) {
+        return ResponseEntity.ok(albumService.addNewAlbum(album));
+    }
 
     @PostMapping("/add_to_album")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> addToAlbum(@RequestBody AlbumDto album)
-    {
+    public ResponseEntity<String> addToAlbum(@RequestBody AlbumDto album) {
         albumService.addToAlbum(album);
-        return ResponseEntity.ok().build(); }
+        return ResponseEntity.ok().build();
+    }
 }

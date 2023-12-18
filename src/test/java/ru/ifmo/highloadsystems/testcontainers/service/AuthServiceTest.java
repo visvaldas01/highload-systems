@@ -1,6 +1,5 @@
 package ru.ifmo.highloadsystems.testcontainers.service;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -11,7 +10,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.ifmo.highloadsystems.exception.AppError;
 import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.JwtResponse;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
@@ -22,7 +20,7 @@ import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
 
 import java.util.List;
 
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
 public class AuthServiceTest {
     @Autowired
@@ -55,10 +53,9 @@ public class AuthServiceTest {
     void validAuthTest() {
         String username = "username";
         String password = "password";
-        Assertions.assertDoesNotThrow(
-                () -> authService.createNewUser(new RegistrationUserDto(username, password, password))
-        );
+        Assertions.assertDoesNotThrow(() -> authService.createNewUser(new RegistrationUserDto(username, password, password)));
         JwtResponse jwtResponse = (JwtResponse) authService.createAuthToken(new JwtRequest(username, password)).getBody();
+        assert jwtResponse != null;
         Assertions.assertEquals(username, jwtTokensUtils.getUsername(jwtResponse.token()));
         Assertions.assertEquals(List.of("ROLE_USER"), jwtTokensUtils.getRoles(jwtResponse.token()));
     }
@@ -71,6 +68,6 @@ public class AuthServiceTest {
     })
     void invalidPasswordAuthTest(String regUsername, String regPassword, String authUsername, String authPassword) {
         Assertions.assertInstanceOf(UserDto.class, authService.createNewUser(new RegistrationUserDto(regUsername, regPassword, regPassword)).getBody());
-        Assertions.assertThrows(BadCredentialsException.class, () -> {authService.createAuthToken(new JwtRequest(authUsername, authPassword));});
+        Assertions.assertThrows(BadCredentialsException.class, () -> authService.createAuthToken(new JwtRequest(authUsername, authPassword)));
     }
 }

@@ -33,14 +33,13 @@ public class AlbumService {
         this.musicianService = musicianService;
     }
 
-    public List<Album> getAll()
-    { return albumRepository.findAll(); }
+    public List<Album> getAll() {
+        return albumRepository.findAll();
+    }
 
-    public String addNewAlbum(AlbumDto album)
-    {
+    public String addNewAlbum(AlbumDto album) {
         Optional<Album> optionalAlbum = albumRepository.findByName(album.getName());
-        if (optionalAlbum.isPresent())
-            throw new AlreadyExistException("Album already exist");
+        if (optionalAlbum.isPresent()) throw new AlreadyExistException("Album already exist");
         else {
             Album newAlbum = new Album();
             newAlbum.setName(album.getName());
@@ -49,16 +48,9 @@ public class AlbumService {
         return "Ok";
     }
 
-    public String addSongsToAlbum(AlbumDto album) {
-        Album update_album = albumRepository.findByName(album.getName()).orElseThrow();
-        for (SongDto song : album.getSongs()) {
-            update_album.getSongs().add(songService.findByName(song.getName()).orElseThrow());
-        }
-        return "Ok";
+    public Optional<Album> findByName(String name) {
+        return albumRepository.findByName(name);
     }
-
-    public Optional<Album> findByName(String name)
-    { return albumRepository.findByName(name); }
 
     @Transactional
     public void addToAlbum(AlbumDto albumDto) {
@@ -69,40 +61,35 @@ public class AlbumService {
             if (albumDto.getSongs() != null && !albumDto.getSongs().isEmpty()) {
                 for (SongDto song : albumDto.getSongs()) {
                     Optional<Song> songOptional = songService.findByName(song.getName());
-                    if (songOptional.isPresent())
-                        modifiableAlbum.getSongs().add(songOptional.get());
+                    if (songOptional.isPresent()) modifiableAlbum.getSongs().add(songOptional.get());
                     else {
                         songService.add(song);
-                        modifiableAlbum.getSongs().add(songService.findByName(song.getName()).get());
+                        modifiableAlbum.getSongs().add(songService.findByName(song.getName()).orElseThrow());
                     }
                 }
             } else if (albumDto.getTags() != null && !albumDto.getTags().isEmpty()) {
                 for (TagDto tag : albumDto.getTags()) {
                     Optional<Tag> tagOptional = tagService.findByName(tag.getName());
-                    if (tagOptional.isPresent())
-                        modifiableAlbum.getTags().add(tagOptional.get());
-                    else
-                    {
+                    if (tagOptional.isPresent()) modifiableAlbum.getTags().add(tagOptional.get());
+                    else {
                         tagService.add(tag);
-                        modifiableAlbum.getTags().add(tagService.findByName(tag.getName()).get());
+                        modifiableAlbum.getTags().add(tagService.findByName(tag.getName()).orElseThrow());
                     }
                 }
             } else if (albumDto.getMusicians() != null && !albumDto.getMusicians().isEmpty()) {
                 for (MusicianDto mus : albumDto.getMusicians()) {
                     Optional<Musician> musicianOptional = musicianService.findByName(mus.getName());
-                    if (musicianOptional.isPresent())
-                        modifiableAlbum.getMusicians().add(musicianOptional.get());
-                    else
-                    {
+                    if (musicianOptional.isPresent()) modifiableAlbum.getMusicians().add(musicianOptional.get());
+                    else {
                         musicianService.add(mus);
-                        modifiableAlbum.getMusicians().add(musicianService.findByName(mus.getName()).get());
+                        modifiableAlbum.getMusicians().add(musicianService.findByName(mus.getName()).orElseThrow());
                     }
                 }
-            }else
-                throw new NothingToAddException("No data to add in message");
+            } else throw new NothingToAddException("No data to add in message");
         } else throw new NothingToAddException("Album not existing");
     }
 
-    public void deleteAll()
-    { albumRepository.deleteAll(); }
+    public void deleteAll() {
+        albumRepository.deleteAll();
+    }
 }

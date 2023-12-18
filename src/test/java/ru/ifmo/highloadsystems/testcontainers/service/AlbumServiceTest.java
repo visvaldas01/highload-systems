@@ -1,7 +1,5 @@
 package ru.ifmo.highloadsystems.testcontainers.service;
 
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +10,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
 import ru.ifmo.highloadsystems.model.dto.*;
-import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.service.AlbumService;
 import ru.ifmo.highloadsystems.service.MusicianService;
 import ru.ifmo.highloadsystems.service.SongService;
@@ -20,9 +17,8 @@ import ru.ifmo.highloadsystems.service.TagService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
 public class AlbumServiceTest {
     @Autowired
@@ -57,8 +53,7 @@ public class AlbumServiceTest {
     }
 
     @Test
-    void addTest()
-    {
+    void addTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
@@ -66,8 +61,7 @@ public class AlbumServiceTest {
     }
 
     @Test
-    void addExistingTest()
-    {
+    void addExistingTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
@@ -76,12 +70,11 @@ public class AlbumServiceTest {
     }
 
     @Test
-    void addSongToAlbumTest()
-    {
+    void addSongToAlbumTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
-        Collection<SongDto> songDtoCollection = new ArrayList<SongDto>();
+        Collection<SongDto> songDtoCollection = new ArrayList<>();
         SongDto songDto1 = new SongDto();
         songDto1.setName("Song1");
         SongDto songDto2 = new SongDto();
@@ -97,12 +90,11 @@ public class AlbumServiceTest {
     }
 
     @Test
-    void addTagToAlbumTest()
-    {
+    void addTagToAlbumTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
-        Collection<TagDto> tagDtoCollection = new ArrayList<TagDto>();
+        Collection<TagDto> tagDtoCollection = new ArrayList<>();
         TagDto tag1 = new TagDto();
         tag1.setName("Tag1");
         TagGroupDto tagGroupDto1 = new TagGroupDto();
@@ -124,12 +116,11 @@ public class AlbumServiceTest {
     }
 
     @Test
-    void addMusicianToAlbumTest()
-    {
+    void addMusicianToAlbumTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
-        Collection<MusicianDto> musicianDtoCollection = new ArrayList<MusicianDto>();
+        Collection<MusicianDto> musicianDtoCollection = new ArrayList<>();
         MusicianDto musicianDto1 = new MusicianDto();
         musicianDto1.setName("Musician1");
         MusicianDto musicianDto2 = new MusicianDto();
@@ -145,21 +136,19 @@ public class AlbumServiceTest {
     }
 
     @Test
-    void nowhereToAddTest()
-    {
+    void nowhereToAddTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->albumService.addToAlbum(albumDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> albumService.addToAlbum(albumDto));
         Assertions.assertEquals("Album not existing", ex.getMessage());
     }
 
     @Test
-    void nothingToAddTest()
-    {
+    void nothingToAddTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->albumService.addToAlbum(albumDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> albumService.addToAlbum(albumDto));
         Assertions.assertEquals("No data to add in message", ex.getMessage());
     }
 }

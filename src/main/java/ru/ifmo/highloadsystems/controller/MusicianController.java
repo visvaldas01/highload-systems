@@ -13,18 +13,19 @@ import java.util.List;
 @RequestMapping("/musicians")
 public class MusicianController {
     private final MusicianService musicianService;
+
     @Autowired
     public MusicianController(MusicianService musicianService) {
         this.musicianService = musicianService;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Musician>> getAll()
-    { return ResponseEntity.ok(musicianService.getAll()); }
+    public ResponseEntity<List<Musician>> getAll() {
+        return ResponseEntity.ok(musicianService.getAll());
+    }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody MusicianDto musicianDto)
-    {
+    public ResponseEntity<?> add(@RequestBody MusicianDto musicianDto) {
         musicianService.add(musicianDto);
         return ResponseEntity.ok().build();
     }

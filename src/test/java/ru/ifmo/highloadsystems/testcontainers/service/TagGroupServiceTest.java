@@ -1,6 +1,5 @@
 package ru.ifmo.highloadsystems.testcontainers.service;
 
-import org.codehaus.groovy.classgen.asm.AssertionWriter;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,11 +8,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
-import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.dto.TagGroupDto;
-import ru.ifmo.highloadsystems.service.*;
+import ru.ifmo.highloadsystems.service.TagGroupService;
 
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
 public class TagGroupServiceTest {
     @Autowired
@@ -39,8 +37,7 @@ public class TagGroupServiceTest {
     }
 
     @Test
-    void addTest()
-    {
+    void addTest() {
         TagGroupDto tagGroupDto = new TagGroupDto();
         tagGroupDto.setName("TagGroup1");
         tagGroupService.add(tagGroupDto);
@@ -48,8 +45,7 @@ public class TagGroupServiceTest {
     }
 
     @Test
-    void addExistingTest()
-    {
+    void addExistingTest() {
         TagGroupDto tagGroupDto = new TagGroupDto();
         tagGroupDto.setName("TagGroup1");
         tagGroupService.add(tagGroupDto);

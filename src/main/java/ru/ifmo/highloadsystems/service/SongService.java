@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NoPermissionException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
-import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.dto.SongDto;
-import ru.ifmo.highloadsystems.model.entity.Album;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.model.entity.User;
@@ -39,29 +37,23 @@ public class SongService {
         return songRepository.findAll(of);
     }
 
-    public Optional<Song> findById(Long id) {
-        return songRepository.findById(id);
-    }
-
     public Optional<Song> findByName(String name) {
         return songRepository.findByName(name);
     }
 
-    public Song save(Song song) {
-        return songRepository.save(song);
+    public void save(Song song) {
+        songRepository.save(song);
     }
 
     public void add(SongDto dto) {
         Optional<Song> optionalSong = findByName(dto.getName());
-        if (optionalSong.isPresent())
-            throw new AlreadyExistException("Song already exist");
-        else
-        {
+        if (optionalSong.isPresent()) throw new AlreadyExistException("This song already exists");
+        else {
             Song song = new Song();
             song.setName(dto.getName());
-            song.setVector1((float)1.0);
-            song.setVector2((float)1.0);
-            song.setVector3((float)1.0);
+            song.setVector1((float) 1.0);
+            song.setVector2((float) 1.0);
+            song.setVector3((float) 1.0);
             songRepository.save(song);
         }
     }
@@ -75,63 +67,32 @@ public class SongService {
             if (dto.getMusician() != null && !dto.getMusician().isEmpty()) {
                 for (MusicianDto mus : dto.getMusician()) {
                     Optional<Musician> musicianOptional = musicianService.findByName(mus.getName());
-                    if (musicianOptional.isPresent())
-                        modifiableSong.getMusicians().add(musicianOptional.get());
+                    if (musicianOptional.isPresent()) modifiableSong.getMusicians().add(musicianOptional.get());
                     else {
                         musicianService.add(mus);
-                        modifiableSong.getMusicians().add(musicianService.findByName(mus.getName()).get());
+                        modifiableSong.getMusicians().add(musicianService.findByName(mus.getName()).orElseThrow());
                     }
                 }
-            }else
-                throw new NothingToAddException("No data to add in song");
-        } else throw new NothingToAddException("Song not existing");
+            } else throw new NothingToAddException("No data to add in song");
+        } else throw new NothingToAddException("Song does not exist");
     }
 
-    public Collection<Song> fromDto(Collection<SongDto> dto)
-    {
-        Collection<Song> list = new ArrayList<>();
-        for (SongDto mus: dto) {
-            Optional<Song> optionalSong = findByName(mus.getName());
-            if (optionalSong.isPresent())
-            {
-                list.add(optionalSong.get());
-            }
-            else
-            {
-                Song tmpMus = new Song();
-                tmpMus.setName(mus.getName());
-                list.add(tmpMus);
-                songRepository.save(tmpMus);
-            }
-        }
-        return list;
-    }
-
-    public Song recommend()
-    {
+    public Song recommend() {
         Optional<User> user = authService.getUserFromContext();
-        if (user.isPresent())
-        {
+        if (user.isPresent()) {
             Recommendation rec = new Recommendation(user.get().getSongs(), songRepository);
-            switch (roleService.getUserRole().getName())
-            {
-                case "ROLE_USER": {
-                    return rec.GetNextSong(0);
-                }
-                case "ROLE_ADMIN": {
-                    return rec.GetNextSong(-1);
-                }
-                default:
-                    throw new NoPermissionException("Don't have permission to have recommendation");
-            }
-        }
-        else
-        {
+            return switch (roleService.getUserRole().getName()) {
+                case "ROLE_USER" -> rec.GetNextSong(0);
+                case "ROLE_ADMIN" -> rec.GetNextSong(-1);
+                default -> throw new NoPermissionException("You don't have permission to get recommendation");
+            };
+        } else {
             List<Song> allSongs = songRepository.findAll();
             return allSongs.get((int) (Math.random() * allSongs.size()));
         }
     }
 
-    public void deleteAll()
-    { songRepository.deleteAll(); }
+    public void deleteAll() {
+        songRepository.deleteAll();
+    }
 }

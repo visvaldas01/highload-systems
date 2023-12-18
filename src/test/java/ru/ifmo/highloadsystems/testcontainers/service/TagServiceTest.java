@@ -15,7 +15,7 @@ import ru.ifmo.highloadsystems.service.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
 public class TagServiceTest {
     @Autowired
@@ -53,8 +53,7 @@ public class TagServiceTest {
     }
 
     @Test
-    void addTest()
-    {
+    void addTest() {
         TagDto tagDto = new TagDto();
         tagDto.setName("Tag1");
         TagGroupDto tagGroupDto = new TagGroupDto();
@@ -65,8 +64,7 @@ public class TagServiceTest {
     }
 
     @Test
-    void addExistingTest()
-    {
+    void addExistingTest() {
         TagDto tagDto = new TagDto();
         tagDto.setName("Tag1");
         TagGroupDto tagGroupDto = new TagGroupDto();
@@ -78,15 +76,14 @@ public class TagServiceTest {
     }
 
     @Test
-    void addSongToTagTest()
-    {
+    void addSongToTagTest() {
         TagDto tagDto = new TagDto();
         tagDto.setName("Tag1");
         TagGroupDto tagGroupDto = new TagGroupDto();
         tagGroupDto.setName("TagGroup1");
         tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
-        Collection<SongDto> songDtoCollection = new ArrayList<SongDto>();
+        Collection<SongDto> songDtoCollection = new ArrayList<>();
         SongDto song1 = new SongDto();
         song1.setName("Song1");
         SongDto song2 = new SongDto();
@@ -102,15 +99,14 @@ public class TagServiceTest {
     }
 
     @Test
-    void addMusicianToTagTest()
-    {
+    void addMusicianToTagTest() {
         TagDto tagDto = new TagDto();
         tagDto.setName("Tag1");
         TagGroupDto tagGroupDto = new TagGroupDto();
         tagGroupDto.setName("TagGroup1");
         tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
-        Collection<MusicianDto> musicianDtoCollection = new ArrayList<MusicianDto>();
+        Collection<MusicianDto> musicianDtoCollection = new ArrayList<>();
         MusicianDto musicianDto1 = new MusicianDto();
         musicianDto1.setName("Musician1");
         MusicianDto musicianDto2 = new MusicianDto();
@@ -126,24 +122,22 @@ public class TagServiceTest {
     }
 
     @Test
-    void nowhereToAddTest()
-    {
+    void nowhereToAddTest() {
         TagDto tagDto = new TagDto();
         tagDto.setName("Tag1");
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->tagService.addTag(tagDto));
-        Assertions.assertEquals("Tag not existing", ex.getMessage());
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> tagService.addTag(tagDto));
+        Assertions.assertEquals("This tag does not exist", ex.getMessage());
     }
 
     @Test
-    void nothingToAddTest()
-    {
+    void nothingToAddTest() {
         TagDto tagDto = new TagDto();
         tagDto.setName("Tag1");
         TagGroupDto tagGroupDto = new TagGroupDto();
         tagGroupDto.setName("TagGroup1");
         tagDto.setTagGroup(tagGroupDto);
         tagService.add(tagDto);
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, ()->tagService.addTag(tagDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> tagService.addTag(tagDto));
         Assertions.assertEquals("No data to add in message", ex.getMessage());
     }
 }

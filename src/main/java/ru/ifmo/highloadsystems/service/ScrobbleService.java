@@ -1,17 +1,16 @@
 package ru.ifmo.highloadsystems.service;
 
-import org.hibernate.id.factory.IdentifierGeneratorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.NoPermissionException;
 import ru.ifmo.highloadsystems.exception.NotImplemented;
-import ru.ifmo.highloadsystems.model.dto.*;
+import ru.ifmo.highloadsystems.model.dto.ScrobbleAnswerDto;
+import ru.ifmo.highloadsystems.model.dto.ScrobbleDto;
+import ru.ifmo.highloadsystems.model.dto.ScrobbleRequestDto;
 import ru.ifmo.highloadsystems.model.entity.Scrobble;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.repository.ScrobbleRepository;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +41,7 @@ public class ScrobbleService {
         return scrobbleRepository.save(scrobble);
     }
 
-    public Scrobble addScrobble(ScrobbleDto scrobbleDto)
-    {
+    public Scrobble addScrobble(ScrobbleDto scrobbleDto) {
         if (authService.getUserFromContext().isEmpty())
             throw new NoPermissionException("Don't have rights to add scrobble");
         if (songService.findByName(scrobbleDto.getSong().getName()).isEmpty()) {
@@ -67,17 +65,13 @@ public class ScrobbleService {
         }
     }
 
-    public ScrobbleAnswerDto getStatistic(ScrobbleRequestDto requestDto)
-    {
+    public ScrobbleAnswerDto getStatistic(ScrobbleRequestDto requestDto) {
         String username;
-        if (requestDto.getUsername().isEmpty())
-        {
+        if (requestDto.getUsername().isEmpty()) {
             if (authService.getUserFromContext().isEmpty())
-                throw new NoPermissionException("You need to be auth to have you statistic");
+                throw new NoPermissionException("You have to be authorized to get your stats");
             username = authService.getUserFromContext().get().getUsername();
-        }
-        else
-            username = requestDto.getUsername().get();
+        } else username = requestDto.getUsername().get();
         switch (requestDto.getRequestTarget()) {
             case "Song": {
                 List<Scrobble> scrobbleList = scrobbleRepository.findAll();
@@ -129,6 +123,7 @@ public class ScrobbleService {
         }
     }
 
-    public void deleteAll()
-    { scrobbleRepository.deleteAll(); }
+    public void deleteAll() {
+        scrobbleRepository.deleteAll();
+    }
 }

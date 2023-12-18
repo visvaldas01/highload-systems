@@ -8,17 +8,13 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
-import ru.ifmo.highloadsystems.exception.NothingToAddException;
-import ru.ifmo.highloadsystems.model.dto.*;
+import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.service.AlbumService;
 import ru.ifmo.highloadsystems.service.MusicianService;
 import ru.ifmo.highloadsystems.service.SongService;
 import ru.ifmo.highloadsystems.service.TagService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-@SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
 public class MusicianServiceTest {
     @Autowired
@@ -53,8 +49,7 @@ public class MusicianServiceTest {
     }
 
     @Test
-    void addTest()
-    {
+    void addTest() {
         MusicianDto musicianDto = new MusicianDto();
         musicianDto.setName("Musician1");
         musicianService.add(musicianDto);
@@ -62,8 +57,7 @@ public class MusicianServiceTest {
     }
 
     @Test
-    void addExistingTest()
-    {
+    void addExistingTest() {
         MusicianDto musicianDto = new MusicianDto();
         musicianDto.setName("Musician1");
         musicianService.add(musicianDto);

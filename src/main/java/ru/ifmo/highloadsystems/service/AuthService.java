@@ -46,8 +46,7 @@ public class AuthService {
         return ResponseEntity.ok(new UserDto(user.getUsername(), user.getPassword()));
     }
 
-    public Optional<User> getUserFromContext()
-    {
+    public Optional<User> getUserFromContext() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         return userService.findByUsername(name);
     }

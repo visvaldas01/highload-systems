@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.service;
 
-import com.sun.source.tree.BreakTree;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
@@ -26,34 +26,28 @@ public class MusicianService {
         return musicianRepository.findAll();
     }
 
-    public Optional<Musician> findByName(String name) { return musicianRepository.findByName(name); }
+    public Optional<Musician> findByName(String name) {
+        return musicianRepository.findByName(name);
+    }
 
-    public void add(MusicianDto dto)
-    {
+    public void add(MusicianDto dto) {
         Optional<Musician> optionalMusician = findByName(dto.getName());
-        if (optionalMusician.isPresent())
-            throw new AlreadyExistException("Musician already exist");
-        else
-        {
+        if (optionalMusician.isPresent()) throw new AlreadyExistException("This musician already exists");
+        else {
             Musician musician = new Musician();
             musician.setName(dto.getName());
             musicianRepository.save(musician);
         }
     }
 
-    public Collection<Musician> fromDto(Collection<MusicianDto> dto)
-    {
-        if (dto == null)
-            return null;
+    public Collection<Musician> fromDto(Collection<MusicianDto> dto) {
+        if (dto == null) return null;
         Collection<Musician> list = new ArrayList<>();
-        for (MusicianDto mus: dto) {
+        for (MusicianDto mus : dto) {
             Optional<Musician> optionalMusician = findByName(mus.getName());
-            if (optionalMusician.isPresent())
-            {
+            if (optionalMusician.isPresent()) {
                 list.add(optionalMusician.get());
-            }
-            else
-            {
+            } else {
                 Musician tmpMus = new Musician();
                 tmpMus.setName(mus.getName());
                 list.add(tmpMus);
@@ -63,6 +57,7 @@ public class MusicianService {
         return list;
     }
 
-    public void deleteAll()
-    { musicianRepository.deleteAll(); }
+    public void deleteAll() {
+        musicianRepository.deleteAll();
+    }
 }

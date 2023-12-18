@@ -2,6 +2,7 @@ package ru.ifmo.highloadsystems.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.highloadsystems.exception.NoPermissionException;
 import ru.ifmo.highloadsystems.exception.NotImplemented;
 import ru.ifmo.highloadsystems.model.dto.ScrobbleAnswerDto;
@@ -41,6 +42,7 @@ public class ScrobbleService {
         return scrobbleRepository.save(scrobble);
     }
 
+    @Transactional
     public Scrobble addScrobble(ScrobbleDto scrobbleDto) {
         if (authService.getUserFromContext().isEmpty())
             throw new NoPermissionException("Don't have rights to add scrobble");
@@ -67,11 +69,11 @@ public class ScrobbleService {
 
     public ScrobbleAnswerDto getStatistic(ScrobbleRequestDto requestDto) {
         String username;
-        if (requestDto.getUsername().isEmpty()) {
+        if (requestDto.getUsername() == null) {
             if (authService.getUserFromContext().isEmpty())
                 throw new NoPermissionException("You have to be authorized to get your stats");
             username = authService.getUserFromContext().get().getUsername();
-        } else username = requestDto.getUsername().get();
+        } else username = requestDto.getUsername();
         switch (requestDto.getRequestTarget()) {
             case "Song": {
                 List<Scrobble> scrobbleList = scrobbleRepository.findAll();

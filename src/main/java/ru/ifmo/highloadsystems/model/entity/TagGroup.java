@@ -19,7 +19,7 @@ public class TagGroup {
     @Column(nullable = false)
     private String name;
 
-    @JsonIgnoreProperties(value = "tag_groups")
+    @JsonIgnoreProperties("tag_groups")
     @OneToMany(mappedBy = "tagGroup", cascade = CascadeType.ALL)
 //    @JoinColumn(name = "tag_group_id", nullable = false)
     private Collection<Tag> tags;

@@ -1,4 +1,6 @@
 package ru.ifmo.highloadsystems.model.dto;
 
-public record JwtResponse(String token) {
+import jakarta.validation.constraints.NotNull;
+
+public record JwtResponse(@NotNull String token) {
 }

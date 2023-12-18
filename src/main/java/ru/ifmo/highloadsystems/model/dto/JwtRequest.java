@@ -1,4 +1,6 @@
 package ru.ifmo.highloadsystems.model.dto;
 
-public record JwtRequest(String username, String password) {
+import jakarta.validation.constraints.NotNull;
+
+public record JwtRequest(@NotNull String username, @NotNull String password) {
 }

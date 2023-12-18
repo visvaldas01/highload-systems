@@ -20,25 +20,25 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    @JsonIgnoreProperties(value = "password")
+    @JsonIgnoreProperties("password")
     private String password;
 
     @ManyToMany
-    @JsonIgnoreProperties(value = "roles")
+    @JsonIgnoreProperties("roles")
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
     @ManyToMany
-    @JsonIgnoreProperties(value = "songs")
+    @JsonIgnoreProperties("songs")
     @JoinTable(name = "songs_users", joinColumns = @JoinColumn(name = "users_id"), inverseJoinColumns = @JoinColumn(name = "songs_id"))
     private Collection<Song> songs;
 
-    @JsonIgnoreProperties(value = "albums")
+    @JsonIgnoreProperties("albums")
     @ManyToMany
     @JoinTable(name = "albums_users", joinColumns = @JoinColumn(name = "users_id"), inverseJoinColumns = @JoinColumn(name = "albums_id"))
     private Collection<Album> albums;
 
-    @JsonIgnoreProperties(value = "musicians")
+    @JsonIgnoreProperties("musicians")
     @ManyToMany
     @JoinTable(name = "musicians_users", joinColumns = @JoinColumn(name = "users_id"), inverseJoinColumns = @JoinColumn(name = "musicians_id"))
     private Collection<Musician> musicians;

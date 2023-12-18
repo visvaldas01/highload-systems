@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Data
 public class ScrobbleRequestDto {
-    Optional<String> username;
+    String username;
     @NotNull
     String requestTarget;
     @NotNull

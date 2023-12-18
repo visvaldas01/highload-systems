@@ -43,13 +43,6 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/secured").authenticated()
-                                .requestMatchers("/info").authenticated()
-                                .requestMatchers("/admin").hasRole("ADMIN")
-                                .requestMatchers("/albums/add").hasRole("USER")
-                                .anyRequest().permitAll()
-                )
                 .sessionManagement(
                         sessMan -> sessMan.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

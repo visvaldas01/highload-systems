@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.model.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
-public record UserDto(@NotNull String username, @NotNull String password) {
+public record UserDto(@NotBlank String username, @NotBlank String password) {
 }

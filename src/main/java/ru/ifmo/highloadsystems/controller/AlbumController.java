@@ -1,9 +1,9 @@
 package ru.ifmo.highloadsystems.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.entity.Album;
@@ -21,23 +21,20 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
-    @Validated
     @GetMapping("/all")
     public ResponseEntity<List<Album>> getAll() {
         return ResponseEntity.ok(albumService.getAll());
     }
 
-    @Validated
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> addAlbum(@RequestBody AlbumDto album) {
+    public ResponseEntity<?> addAlbum(@Valid @RequestBody AlbumDto album) {
         return ResponseEntity.ok(albumService.addNewAlbum(album));
     }
 
-    @Validated
     @PostMapping("/add_to_album")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> addToAlbum(@RequestBody AlbumDto album) {
+    public ResponseEntity<String> addToAlbum(@Valid @RequestBody AlbumDto album) {
         albumService.addToAlbum(album);
         return ResponseEntity.ok().build();
     }

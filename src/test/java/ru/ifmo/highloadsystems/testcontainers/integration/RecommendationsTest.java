@@ -63,31 +63,31 @@ public class RecommendationsTest {
 
         mockMvc.perform(post("/songs/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
-                        .content("{\"name\": \"Song1\"}")
+                        .content("{ \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post("/songs/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
-                        .content("{\"name\": \"Song2\"}")
+                        .content("{ \"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }] }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
-                        .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1\"}}")
+                        .content("{ \"song\": { \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }, \"date\": \"2023-11-14T16:56:31.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
-                        .content("{\"date\": \"2023-11-14T16:56:32.515092\", \"song\": {\"name\": \"Song1\"}}")
+                        .content("{ \"song\": { \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }, \"date\": \"2023-11-14T16:56:32.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
-                        .content("{\"date\": \"2023-11-14T16:56:33.515092\", \"song\": {\"name\": \"Song2\"}}")
+                        .content("{ \"song\": { \"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }] }, \"date\": \"2023-11-14T16:56:33.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

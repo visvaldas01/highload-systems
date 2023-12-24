@@ -1,9 +1,9 @@
 package ru.ifmo.highloadsystems.model.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class TagGroupDto {
-    @NotNull String name;
+    @NotBlank String name;
 }

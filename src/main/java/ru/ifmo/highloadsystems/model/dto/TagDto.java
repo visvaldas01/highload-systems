@@ -1,5 +1,7 @@
 package ru.ifmo.highloadsystems.model.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -7,13 +9,13 @@ import java.util.Collection;
 
 @Data
 public class TagDto {
-    @NotNull String name;
+    @NotBlank String name;
 
-    Collection<SongDto> songs;
+    @Valid Collection<SongDto> songs;
 
-    Collection<AlbumDto> albums;
+    @Valid Collection<AlbumDto> albums;
 
-    Collection<MusicianDto> musicians;
+    @Valid Collection<MusicianDto> musicians;
 
     @NotNull TagGroupDto tagGroup;
 }

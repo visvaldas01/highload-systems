@@ -3,7 +3,7 @@ package ru.ifmo.highloadsystems.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.entity.Musician;
@@ -21,16 +21,14 @@ public class MusicianController {
         this.musicianService = musicianService;
     }
 
-    @Validated
     @GetMapping("/all")
     public ResponseEntity<List<Musician>> getAll() {
         return ResponseEntity.ok(musicianService.getAll());
     }
 
-    @Validated
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> add(@RequestBody MusicianDto musicianDto) {
+    public ResponseEntity<?> add(@Valid @RequestBody MusicianDto musicianDto) {
         musicianService.add(musicianDto);
         return ResponseEntity.ok().build();
     }

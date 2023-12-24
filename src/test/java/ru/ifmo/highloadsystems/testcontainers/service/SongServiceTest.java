@@ -94,7 +94,7 @@ public class SongServiceTest {
         SongDto songDto = new SongDto();
         songDto.setName("Song1");
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> songService.addTo(songDto));
-        Assertions.assertEquals("Song does not exist", ex.getMessage());
+        Assertions.assertEquals("This song does not exist", ex.getMessage());
     }
 
     @Test

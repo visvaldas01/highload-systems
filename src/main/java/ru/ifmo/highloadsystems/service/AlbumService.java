@@ -41,7 +41,7 @@ public class AlbumService {
 
     public String addNewAlbum(AlbumDto album) {
         Optional<Album> optionalAlbum = albumRepository.findByName(album.getName());
-        if (optionalAlbum.isPresent()) throw new AlreadyExistException("Album already exist");
+        if (optionalAlbum.isPresent()) throw new AlreadyExistException("This album already exists");
         else {
             Album newAlbum = new Album();
             newAlbum.setName(album.getName());
@@ -88,7 +88,7 @@ public class AlbumService {
                     }
                 }
             } else throw new NothingToAddException("No data to add in message");
-        } else throw new NothingToAddException("Album not existing");
+        } else throw new NothingToAddException("This album does not exist");
     }
 
     public void deleteAll() {

@@ -74,7 +74,7 @@ public class SongService {
                     }
                 }
             } else throw new NothingToAddException("No data to add in song");
-        } else throw new NothingToAddException("Song does not exist");
+        } else throw new NothingToAddException("This song does not exist");
     }
 
     public Song recommend() {

@@ -140,7 +140,7 @@ public class AlbumServiceTest {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> albumService.addToAlbum(albumDto));
-        Assertions.assertEquals("Album not existing", ex.getMessage());
+        Assertions.assertEquals("This album does not exist", ex.getMessage());
     }
 
     @Test

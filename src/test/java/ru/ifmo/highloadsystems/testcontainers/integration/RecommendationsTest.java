@@ -41,14 +41,9 @@ public class RecommendationsTest {
         postgreSQLContainer.stop();
     }
 
-    String auth() throws Exception {
-        mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"username\": \"" + "user1" + "\", \"password\": \"1234\", \"confirmPassword\": \"1234\" }")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
+    String auth(String username, String password) throws Exception {
         MvcResult result = mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"username\": \"" + "user1" + "\", \"password\": \"1234\" }")
+                        .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
@@ -59,7 +54,7 @@ public class RecommendationsTest {
 
     @Test
     void recommendTest() throws Exception {
-        String jwt = auth();
+        String jwt = auth("Yaroslave", "ccc");
 
         mockMvc.perform(post("/songs/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)

@@ -39,14 +39,9 @@ public class ScrobbleTest {
         postgreSQLContainer.stop();
     }
 
-    String auth(String username) throws Exception {
-        mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"username\": \"" + username + "\", \"password\": \"1234\", \"confirmPassword\": \"1234\" }")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
+    String auth(String username, String password) throws Exception {
         MvcResult result = mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"username\": \"" + username + "\", \"password\": \"1234\" }")
+                        .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
@@ -55,9 +50,19 @@ public class ScrobbleTest {
         return object.getString("token");
     }
 
+    void reg(String username, String password) throws Exception {
+        String jwt = auth("Yaroslave", "ccc");
+        mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + jwt)
+                        .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"confirmPassword\": \"" + password + "\" }")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
     @Test
     void addScrobbleTest() throws Exception {
-        String jwt = auth("user1");
+        reg("user1", "abacab");
+        String jwt = auth("user1", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Rooster\", \"musician\": [{ \"name\": \"Alice in Chains\" }] }, \"date\": \"2023-11-14T16:56:30.515092\" }")
@@ -75,7 +80,8 @@ public class ScrobbleTest {
 
     @Test
     void getAllTest() throws Exception {
-        String jwt = auth("user2");
+        reg("user2", "abacab");
+        String jwt = auth("user2", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:30.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
@@ -102,7 +108,8 @@ public class ScrobbleTest {
 
     @Test
     void getStatsTest() throws Exception {
-        String jwt = auth("user3");
+        reg("user3", "abacab");
+        String jwt = auth("user3", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }, \"date\": \"2023-11-14T16:56:30.515092\" }")
@@ -130,7 +137,8 @@ public class ScrobbleTest {
 
     @Test
     void getNoAuthTest() throws Exception {
-        String jwt = auth("user4");
+        reg("user4", "abacab");
+        String jwt = auth("user4", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
@@ -157,7 +165,8 @@ public class ScrobbleTest {
 
     @Test
     void getStatsOnlyAuthTest() throws Exception {
-        String jwt = auth("user5");
+        reg("user5", "abacab");
+        String jwt = auth("user5", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
@@ -185,8 +194,8 @@ public class ScrobbleTest {
 
     @Test
     void getStatsNotImplementedTest() throws Exception {
-        String jwt = auth("user6");
-
+        reg("user6", "abacab");
+        String jwt = auth("user6", "abacab");
         mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"requestTarget\": \"Random\", \"size\": \"3\"}")
@@ -196,7 +205,8 @@ public class ScrobbleTest {
 
     @Test
     void getStatsAlbumTest() throws Exception {
-        String jwt = auth("user7");
+        reg("user7", "abacab");
+        String jwt = auth("user7", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1.7\", \"musician\": [{ \"name\": \"Musician1\"}], \"album\": [{\"name\": \"Album2\"}]}}")
@@ -224,7 +234,8 @@ public class ScrobbleTest {
 
     @Test
     void getStatsMusicianTest() throws Exception {
-        String jwt = auth("user8");
+        reg("user8", "abacab");
+        String jwt = auth("user8", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1.8\", \"musician\": [{\"name\": \"Musician2\"}]}}")
@@ -258,7 +269,8 @@ public class ScrobbleTest {
 
     @Test
     void getStatsTagTest() throws Exception {
-        String jwt = auth("user9");
+        reg("user9", "abacab");
+        String jwt = auth("user9", "abacab");
         mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1.9\", \"musician\": [{\"name\": \"Musician2\"}], \"tag\": [{\"name\": \"Tag2\", \"tagGroup\": {\"name\": \"TagGroup\"}}]}}")

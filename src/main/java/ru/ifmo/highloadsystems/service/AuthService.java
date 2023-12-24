@@ -11,7 +11,6 @@ import ru.ifmo.highloadsystems.exception.RegisterException;
 import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.JwtResponse;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
-import ru.ifmo.highloadsystems.model.dto.UserDto;
 import ru.ifmo.highloadsystems.model.entity.User;
 import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
 
@@ -43,7 +42,7 @@ public class AuthService {
         }
 
         var user = userService.getNewUser(registrationUserDto);
-        return ResponseEntity.ok(new UserDto(user.getUsername(), user.getPassword()));
+        return ResponseEntity.ok(user.getUsername());
     }
 
     public Optional<User> getUserFromContext() {

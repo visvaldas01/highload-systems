@@ -13,7 +13,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.JwtResponse;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
-import ru.ifmo.highloadsystems.model.dto.UserDto;
 import ru.ifmo.highloadsystems.service.AuthService;
 import ru.ifmo.highloadsystems.service.UserService;
 import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
@@ -67,7 +66,7 @@ public class AuthServiceTest {
             "username, password, wrongUsername, wrongPassword"
     })
     void invalidPasswordAuthTest(String regUsername, String regPassword, String authUsername, String authPassword) {
-        Assertions.assertInstanceOf(UserDto.class, authService.createNewUser(new RegistrationUserDto(regUsername, regPassword, regPassword)).getBody());
+        Assertions.assertEquals(regUsername, authService.createNewUser(new RegistrationUserDto(regUsername, regPassword, regPassword)).getBody());
         Assertions.assertThrows(BadCredentialsException.class, () -> authService.createAuthToken(new JwtRequest(authUsername, authPassword)));
     }
 }

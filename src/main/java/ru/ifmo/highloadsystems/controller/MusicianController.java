@@ -21,12 +21,12 @@ public class MusicianController {
         this.musicianService = musicianService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Musician>> getAll() {
         return ResponseEntity.ok(musicianService.getAll());
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> add(@Valid @RequestBody MusicianDto musicianDto) {
         musicianService.add(musicianDto);

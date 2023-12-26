@@ -21,12 +21,12 @@ public class TagGroupController {
         this.tagGroupService = tagGroupService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<TagGroup>> getAll() {
         return ResponseEntity.ok(tagGroupService.getAll());
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> add(@Valid @RequestBody TagGroupDto dto) {
         tagGroupService.add(dto);

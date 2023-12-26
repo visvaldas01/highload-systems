@@ -21,20 +21,21 @@ public class SongController {
         this.songService = songService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<Page<Song>> getAll(
             @RequestParam(value = "offset", defaultValue = "0") Integer offset,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit) {
         return ResponseEntity.ok(songService.getAll(PageRequest.of(offset, limit)));
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> add(@Valid @RequestBody SongDto songDto) {
         songService.add(songDto);
         return ResponseEntity.ok().build();
     }
 
+    //TODO
     @PostMapping("/add_to")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addTo(@Valid @RequestBody SongDto songDto) {
@@ -42,7 +43,7 @@ public class SongController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/recommend")
+    @GetMapping("/recommendations")
     public ResponseEntity<?> recommend() {
         return ResponseEntity.ok(songService.recommend());
     }

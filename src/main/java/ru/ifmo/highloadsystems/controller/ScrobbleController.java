@@ -24,18 +24,18 @@ public class ScrobbleController {
         this.scrobbleService = scrobbleService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Scrobble>> getAll() {
         return ResponseEntity.ok(scrobbleService.getAll());
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Scrobble> addScrobble(@Valid @RequestBody ScrobbleDto scrobbleDto) {
         return ResponseEntity.ok(scrobbleService.addScrobble(scrobbleDto));
     }
 
-    @GetMapping("/get_stat")
+    @GetMapping("/stats")
     public ResponseEntity<ScrobbleAnswerDto> getStat(@Valid @RequestBody ScrobbleRequestDto scrobbleRequestDto) {
         return ResponseEntity.ok(scrobbleService.getStatistic(scrobbleRequestDto));
     }

@@ -21,17 +21,18 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Album>> getAll() {
         return ResponseEntity.ok(albumService.getAll());
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addAlbum(@Valid @RequestBody AlbumDto album) {
         return ResponseEntity.ok(albumService.addNewAlbum(album));
     }
 
+    //TODO
     @PostMapping("/add_to_album")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> addToAlbum(@Valid @RequestBody AlbumDto album) {

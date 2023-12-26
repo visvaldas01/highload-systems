@@ -40,7 +40,7 @@ public class AuthTest {
     }
 
     String auth(String username, String password) throws Exception {
-        MvcResult result = mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mockMvc.perform(post("/auth/token").contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -52,7 +52,7 @@ public class AuthTest {
 
     void reg(String username, String password) throws Exception {
         String jwt = auth("Yaroslave", "ccc");
-        mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/auth/registration").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"confirmPassword\": \"" + password + "\" }")
                         .accept(MediaType.APPLICATION_JSON))
@@ -69,7 +69,7 @@ public class AuthTest {
         reg("userSame", "abacab");
         String jwt = auth("Yaroslave", "ccc");
 
-        mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/auth/registration").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"username\": \"userSame\", \"password\": \"abacab\", \"confirmPassword\": \"abacab\" }")
                         .accept(MediaType.APPLICATION_JSON))
@@ -80,7 +80,7 @@ public class AuthTest {
     void notEqualPasswordTest() throws Exception {
         String jwt = auth("Yaroslave", "ccc");
 
-        mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/auth/registration").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"username\": \"userSame\", \"password\": \"12345\", \"confirmPassword\": \"1234\" }")
                         .accept(MediaType.APPLICATION_JSON))

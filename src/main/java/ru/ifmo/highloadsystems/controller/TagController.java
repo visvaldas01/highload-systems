@@ -21,18 +21,19 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Tag>> getAll() {
         return ResponseEntity.ok(tagService.getAll());
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addTag(@Valid @RequestBody TagDto dto) {
         tagService.add(dto);
         return ResponseEntity.ok().build();
     }
 
+    //TODO
     @PostMapping("/add_to_tag")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addToTag(@Valid @RequestBody TagDto tag) {

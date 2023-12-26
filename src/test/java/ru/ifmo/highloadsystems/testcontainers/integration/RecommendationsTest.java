@@ -42,7 +42,7 @@ public class RecommendationsTest {
     }
 
     String auth(String username, String password) throws Exception {
-        MvcResult result = mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mockMvc.perform(post("/auth/token").contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -56,37 +56,37 @@ public class RecommendationsTest {
     void recommendTest() throws Exception {
         String jwt = auth("Yaroslave", "ccc");
 
-        mockMvc.perform(post("/songs/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/songs").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/songs/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/songs").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }] }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }, \"date\": \"2023-11-14T16:56:31.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }, \"date\": \"2023-11-14T16:56:32.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }] }, \"date\": \"2023-11-14T16:56:33.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/songs/recommend").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/songs/recommendations").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("{\"id\":1,\"name\":\"Dust My Broom\",\"vector1\":null,\"vector2\":null,\"vector3\":null,\"musicians\":[],\"tags\":[],\"users\":[{\"id\":1,\"username\":\"Irina\",\"password\":\"$2a$10$gh1NJRt7IXfmKb5fXP0pmOwSuTWwXcrFIENAdXi/2vCsFhZcerhVS\",\"roles\":[{\"id\":1,\"name\":\"ROLE_USER\"}],\"albums\":[],\"musicians\":[]}],\"albums\":[]}"));

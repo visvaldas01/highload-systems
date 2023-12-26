@@ -40,7 +40,7 @@ public class ScrobbleTest {
     }
 
     String auth(String username, String password) throws Exception {
-        MvcResult result = mockMvc.perform(post("/auth").contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mockMvc.perform(post("/auth/token").contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -52,7 +52,7 @@ public class ScrobbleTest {
 
     void reg(String username, String password) throws Exception {
         String jwt = auth("Yaroslave", "ccc");
-        mockMvc.perform(post("/registration").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/auth/registration").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"confirmPassword\": \"" + password + "\" }")
                         .accept(MediaType.APPLICATION_JSON))
@@ -63,7 +63,7 @@ public class ScrobbleTest {
     void addScrobbleTest() throws Exception {
         reg("user1", "abacab");
         String jwt = auth("user1", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Rooster\", \"musician\": [{ \"name\": \"Alice in Chains\" }] }, \"date\": \"2023-11-14T16:56:30.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
@@ -72,7 +72,7 @@ public class ScrobbleTest {
 
     @Test
     void addScrobbleNotLoginTest() throws Exception {
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"song\": { \"name\": \"Rooster\", \"musician\": [{ \"name\": \"Alice in Chains\" }] }, \"date\": \"2023-11-14T16:56:30.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(401));
@@ -82,25 +82,25 @@ public class ScrobbleTest {
     void getAllTest() throws Exception {
         reg("user2", "abacab");
         String jwt = auth("user2", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:30.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:30.515092\", \"song\": {\"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:30.515092\", \"song\": {\"name\": \"Song3\", \"musician\": [{ \"name\": \"Musician3\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/scrobbles/all").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -110,25 +110,25 @@ public class ScrobbleTest {
     void getStatsTest() throws Exception {
         reg("user3", "abacab");
         String jwt = auth("user3", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }, \"date\": \"2023-11-14T16:56:30.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }] }, \"date\": \"2023-11-14T16:57:30.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{ \"song\": { \"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }] }, \"date\": \"2023-11-14T16:58:30.515092\" }")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles/stats").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"username\": \"user3\", \"requestTarget\": \"Song\", \"size\": \"3\"}")
                         .accept(MediaType.APPLICATION_JSON))
@@ -139,25 +139,25 @@ public class ScrobbleTest {
     void getNoAuthTest() throws Exception {
         reg("user4", "abacab");
         String jwt = auth("user4", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:32.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:33.515092\", \"song\": {\"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles/stats").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"requestTarget\": \"Song\", \"size\": \"3\"}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(423));
@@ -167,25 +167,25 @@ public class ScrobbleTest {
     void getStatsOnlyAuthTest() throws Exception {
         reg("user5", "abacab");
         String jwt = auth("user5", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:32.515092\", \"song\": {\"name\": \"Song1\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:33.515092\", \"song\": {\"name\": \"Song2\", \"musician\": [{ \"name\": \"Blur\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles/stats").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"requestTarget\": \"Song\", \"size\": \"3\"}")
                         .accept(MediaType.APPLICATION_JSON))
@@ -196,7 +196,7 @@ public class ScrobbleTest {
     void getStatsNotImplementedTest() throws Exception {
         reg("user6", "abacab");
         String jwt = auth("user6", "abacab");
-        mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles/stats").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"requestTarget\": \"Random\", \"size\": \"3\"}")
                         .accept(MediaType.APPLICATION_JSON))
@@ -207,25 +207,25 @@ public class ScrobbleTest {
     void getStatsAlbumTest() throws Exception {
         reg("user7", "abacab");
         String jwt = auth("user7", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1.7\", \"musician\": [{ \"name\": \"Musician1\"}], \"album\": [{\"name\": \"Album2\"}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1.7\", \"musician\": [{ \"name\": \"Musician1\" }]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:33.515092\", \"song\": {\"name\": \"Song2.7\", \"musician\": [{ \"name\": \"Musician1\"}], \"album\": [{\"name\": \"Album1\"}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles/stats").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"requestTarget\": \"Album\", \"size\": \"3\"}")
                         .accept(MediaType.APPLICATION_JSON))
@@ -236,31 +236,31 @@ public class ScrobbleTest {
     void getStatsMusicianTest() throws Exception {
         reg("user8", "abacab");
         String jwt = auth("user8", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1.8\", \"musician\": [{\"name\": \"Musician2\"}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:32.515092\", \"song\": {\"name\": \"Song1.8\", \"musician\": [{\"name\": \"Musician2\"}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:32.515092\", \"song\": {\"name\": \"Song1.8\"}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:33.515092\", \"song\": {\"name\": \"Song2.8\",\"musician\": [{\"name\": \"Musician1\"}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles/stats").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"requestTarget\": \"Musician\", \"size\": \"3\"}")
                         .accept(MediaType.APPLICATION_JSON))
@@ -271,25 +271,25 @@ public class ScrobbleTest {
     void getStatsTagTest() throws Exception {
         reg("user9", "abacab");
         String jwt = auth("user9", "abacab");
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:31.515092\", \"song\": {\"name\": \"Song1.9\", \"musician\": [{\"name\": \"Musician2\"}], \"tag\": [{\"name\": \"Tag2\", \"tagGroup\": {\"name\": \"TagGroup\"}}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:32.515092\", \"song\": {\"name\": \"Song1.9\", \"musician\": [{\"name\": \"Musician2\"}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/scrobbles/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/scrobbles").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"date\": \"2023-11-14T16:56:33.515092\", \"song\": {\"name\": \"Song2.9\", \"musician\": [{\"name\": \"Musician2\"}], \"tag\": [{\"name\": \"Tag1\", \"tagGroup\": {\"name\": \"TagGroup\"}}]}}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/scrobbles/get_stat").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/scrobbles/stats").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .content("{\"requestTarget\": \"Tag\", \"size\": \"3\"}")
                         .accept(MediaType.APPLICATION_JSON))

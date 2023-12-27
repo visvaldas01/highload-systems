@@ -89,6 +89,6 @@ public class RecommendationsTest {
         mockMvc.perform(get("/songs/recommendations").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwt)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"id\":1,\"name\":\"Dust My Broom\",\"vector1\":null,\"vector2\":null,\"vector3\":null,\"musicians\":[],\"tags\":[],\"users\":[{\"id\":1,\"username\":\"Irina\",\"password\":\"$2a$10$gh1NJRt7IXfmKb5fXP0pmOwSuTWwXcrFIENAdXi/2vCsFhZcerhVS\",\"roles\":[{\"id\":1,\"name\":\"ROLE_USER\"}],\"albums\":[],\"musicians\":[]}],\"albums\":[]}"));
+                .andExpect(content().json("{\"id\":1,\"name\":\"Dust My Broom\",\"vector1\":null,\"vector2\":null,\"vector3\":null,\"musicians\":[],\"tags\":[],\"users\":[{\"id\":1,\"username\":\"Irina\",\"roles\":[{\"id\":1,\"name\":\"ROLE_USER\"}],\"albums\":[],\"musicians\":[]}],\"albums\":[]}"));
     }
 }

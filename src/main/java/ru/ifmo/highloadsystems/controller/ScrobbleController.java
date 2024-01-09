@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import jakarta.validation.Valid;
@@ -14,15 +14,10 @@ import ru.ifmo.highloadsystems.service.ScrobbleService;
 import java.util.List;
 
 @RestController
-@Valid
+@RequiredArgsConstructor
 @RequestMapping("/scrobbles")
 public class ScrobbleController {
     private final ScrobbleService scrobbleService;
-
-    @Autowired
-    public ScrobbleController(ScrobbleService scrobbleService) {
-        this.scrobbleService = scrobbleService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Scrobble>> getAll() {

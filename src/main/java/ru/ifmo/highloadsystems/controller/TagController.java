@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import jakarta.validation.Valid;
@@ -12,14 +12,10 @@ import ru.ifmo.highloadsystems.service.TagService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/tags")
 public class TagController {
     private final TagService tagService;
-
-    @Autowired
-    public TagController(TagService tagService) {
-        this.tagService = tagService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Tag>> getAll() {

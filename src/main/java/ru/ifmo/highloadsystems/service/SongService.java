@@ -1,7 +1,7 @@
 package ru.ifmo.highloadsystems.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,19 +19,12 @@ import ru.ifmo.highloadsystems.repository.SongRepository;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class SongService {
     private final SongRepository songRepository;
     private final MusicianService musicianService;
     private final AuthService authService;
     private final RoleService roleService;
-
-    @Autowired
-    public SongService(SongRepository songRepository, MusicianService musicianService, AuthService authService, RoleService roleService) {
-        this.songRepository = songRepository;
-        this.musicianService = musicianService;
-        this.authService = authService;
-        this.roleService = roleService;
-    }
 
     public Page<Song> getAll(PageRequest of) {
         return songRepository.findAll(of);

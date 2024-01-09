@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.model.dto.TagGroupDto;
@@ -11,13 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TagGroupService {
     private final TagGroupRepository tagGroupRepository;
-
-    @Autowired
-    public TagGroupService(TagGroupRepository tagGroupRepository) {
-        this.tagGroupRepository = tagGroupRepository;
-    }
 
     public List<TagGroup> getAll() {
         return tagGroupRepository.findAll();

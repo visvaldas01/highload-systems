@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +12,10 @@ import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.service.SongService;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/songs")
 public class SongController {
     private final SongService songService;
-
-    @Autowired
-    public SongController(SongService songService) {
-        this.songService = songService;
-    }
 
     @GetMapping
     public ResponseEntity<Page<Song>> getAll(

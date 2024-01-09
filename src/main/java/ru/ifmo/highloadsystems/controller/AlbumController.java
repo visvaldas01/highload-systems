@@ -1,7 +1,7 @@
 package ru.ifmo.highloadsystems.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +12,10 @@ import ru.ifmo.highloadsystems.service.AlbumService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/albums")
 public class AlbumController {
     private final AlbumService albumService;
-
-    @Autowired
-    public AlbumController(AlbumService albumService) {
-        this.albumService = albumService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Album>> getAll() {

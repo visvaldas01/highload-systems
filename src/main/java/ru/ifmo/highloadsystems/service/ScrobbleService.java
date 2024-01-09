@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.highloadsystems.exception.NoPermissionException;
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ScrobbleService {
     private final ScrobbleRepository scrobbleRepository;
     private final SongService songService;
@@ -25,18 +26,6 @@ public class ScrobbleService {
     private final AuthService authService;
     private final AlbumService albumService;
     private final TagService tagService;
-
-
-    @Autowired
-    public ScrobbleService(ScrobbleRepository scrobbleRepository, SongService songService, UserService userService, MusicianService musicianService, AuthService authService, AlbumService albumService, TagService tagService) {
-        this.scrobbleRepository = scrobbleRepository;
-        this.songService = songService;
-        this.userService = userService;
-        this.musicianService = musicianService;
-        this.authService = authService;
-        this.albumService = albumService;
-        this.tagService = tagService;
-    }
 
     public List<Scrobble> getAll() {
         return scrobbleRepository.findAll();

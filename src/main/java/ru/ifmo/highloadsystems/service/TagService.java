@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
@@ -20,20 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TagService {
     private final TagRepository tagRepository;
     private final SongService songService;
     private final MusicianService musicianService;
     private final TagGroupService tagGroupService;
-
-
-    @Autowired
-    public TagService(TagRepository tagRepository, SongService songService, MusicianService musicianService, TagGroupService tagGroupService) {
-        this.tagRepository = tagRepository;
-        this.songService = songService;
-        this.musicianService = musicianService;
-        this.tagGroupService = tagGroupService;
-    }
 
     public List<Tag> getAll() {
         return tagRepository.findAll();

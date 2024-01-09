@@ -1,7 +1,7 @@
 package ru.ifmo.highloadsystems.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
@@ -14,13 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MusicianService {
     private final MusicianRepository musicianRepository;
-
-    @Autowired
-    public MusicianService(MusicianRepository musicianRepository) {
-        this.musicianRepository = musicianRepository;
-    }
 
     public List<Musician> getAll() {
         return musicianRepository.findAll();

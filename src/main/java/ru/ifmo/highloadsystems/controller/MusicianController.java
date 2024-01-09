@@ -1,6 +1,6 @@
 package ru.ifmo.highloadsystems.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import jakarta.validation.Valid;
@@ -12,14 +12,10 @@ import ru.ifmo.highloadsystems.service.MusicianService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/musicians")
 public class MusicianController {
     private final MusicianService musicianService;
-
-    @Autowired
-    public MusicianController(MusicianService musicianService) {
-        this.musicianService = musicianService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Musician>> getAll() {

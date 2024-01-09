@@ -1,7 +1,7 @@
 package ru.ifmo.highloadsystems.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
@@ -21,19 +21,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AlbumService {
     private final AlbumRepository albumRepository;
     private final SongService songService;
     private final TagService tagService;
     private final MusicianService musicianService;
-
-    @Autowired
-    public AlbumService(AlbumRepository albumRepository, SongService songService, TagService tagService, MusicianService musicianService) {
-        this.albumRepository = albumRepository;
-        this.songService = songService;
-        this.tagService = tagService;
-        this.musicianService = musicianService;
-    }
 
     public List<Album> getAll() {
         return albumRepository.findAll();

@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ../../../../
+cd ..
 CL='\033[0;33m'
 NC='\033[0m'
 echo -e "${CL}gradle clean:${NC}"

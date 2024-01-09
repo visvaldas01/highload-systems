@@ -1,4 +1,4 @@
 #!/bin/bash
-cd ../../../../
+cd ..
 #./gradlew build -x test
 docker compose up

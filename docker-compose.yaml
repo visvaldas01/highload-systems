@@ -9,6 +9,15 @@ services:
     ports:
       - "8761:8761"
 
+  config-server:
+    container_name: config-server
+    build: config-server
+    image: config-server:latest
+    depends_on:
+      - eureka-server
+    ports:
+      - "8888:8888"
+
   app:
     container_name: app
     build: app

@@ -6,6 +6,8 @@ jwt:
   lifetime: 30m
 
 spring:
+  application:
+    name: app
   jpa:
     show-sql: true
     database: postgresql
@@ -25,3 +27,8 @@ spring:
 
   main:
     allow-circular-references: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}

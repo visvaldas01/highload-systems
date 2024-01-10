@@ -8,6 +8,12 @@ services:
     ports:
       - "8761:8761"
 
+  gateway:
+    build: gateway
+    container_name: gateway
+    ports:
+      - "8765:8765"
+
   app:
     container_name: app
     build: app

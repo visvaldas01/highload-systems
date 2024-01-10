@@ -1,3 +1,4 @@
 rootProject.name = 'highload-systems'
 include 'app'
+include 'eureka-server'
 

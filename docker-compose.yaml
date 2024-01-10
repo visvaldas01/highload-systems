@@ -2,6 +2,12 @@ version: '3.9'
 
 services:
 
+  config-server:
+    build: config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+
   eureka-server:
     build: eureka-server
     container_name: eureka-server

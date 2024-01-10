@@ -4,9 +4,7 @@ services:
 
   app:
     container_name: app
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: app
     image: app:latest
     depends_on:
       - postgres

@@ -18,6 +18,15 @@ services:
     ports:
       - "8888:8888"
 
+  gateway:
+    container_name: gateway
+    build: gateway
+    image: gateway:latest
+    depends_on:
+      - eureka-server
+    ports:
+      - "8765:8765"
+
   app:
     container_name: app
     build: app

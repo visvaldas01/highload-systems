@@ -14,7 +14,6 @@ import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.JwtResponse;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
 import ru.ifmo.highloadsystems.service.AuthService;
-import ru.ifmo.highloadsystems.service.UserService;
 import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
 
 import java.util.List;

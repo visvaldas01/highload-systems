@@ -12,6 +12,7 @@ import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.JwtResponse;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
 import ru.ifmo.highloadsystems.model.entity.User;
+import ru.ifmo.highloadsystems.rest.UserApi;
 import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
 
 import java.util.Optional;
@@ -20,14 +21,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserService userService;
+    private final UserApi userApi;
     private final JwtTokensUtils jwtTokensUtils;
     private final AuthenticationManager authenticationManager;
 
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
 
-        var userDetails = userService.loadUserByUsername(authRequest.username());
+        var userDetails = userApi.loadUserByUsername(authRequest.username());
         var token = jwtTokensUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
 
@@ -37,16 +38,16 @@ public class AuthService {
         if (!registrationUserDto.password().equals(registrationUserDto.confirmPassword())) {
             throw new RegisterException("Passwords not match");
         }
-        if (userService.findByUsername(registrationUserDto.username()).isPresent()) {
+        if (userApi.findByUsername(registrationUserDto.username()).isPresent()) {
             throw new RegisterException("User with this name already exists");
         }
 
-        var user = userService.getNewUser(registrationUserDto);
+        var user = userApi.getNewUser(registrationUserDto);
         return ResponseEntity.ok(user.getUsername());
     }
 
     public Optional<User> getUserFromContext() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.findByUsername(name);
+        return userApi.findByUsername(name);
     }
 }

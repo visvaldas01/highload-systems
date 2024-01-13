@@ -10,10 +10,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
 import ru.ifmo.highloadsystems.model.dto.*;
-import ru.ifmo.highloadsystems.service.AlbumService;
-import ru.ifmo.highloadsystems.service.MusicianService;
-import ru.ifmo.highloadsystems.service.SongService;
-import ru.ifmo.highloadsystems.service.TagService;
 
 import java.util.ArrayList;
 import java.util.Collection;

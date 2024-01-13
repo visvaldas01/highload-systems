@@ -11,6 +11,8 @@ import ru.ifmo.highloadsystems.model.dto.ScrobbleRequestDto;
 import ru.ifmo.highloadsystems.model.entity.Scrobble;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.repository.ScrobbleRepository;
+import ru.ifmo.highloadsystems.rest.AuthApi;
+import ru.ifmo.highloadsystems.rest.UserApi;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +23,9 @@ import java.util.Map;
 public class ScrobbleService {
     private final ScrobbleRepository scrobbleRepository;
     private final SongService songService;
-    private final UserService userService;
+    private final UserApi userApi;
     private final MusicianService musicianService;
-    private final AuthService authService;
+    private final AuthApi authApi;
     private final AlbumService albumService;
     private final TagService tagService;
 
@@ -37,7 +39,7 @@ public class ScrobbleService {
 
     @Transactional
     public Scrobble addScrobble(ScrobbleDto scrobbleDto) {
-        if (authService.getUserFromContext().isEmpty())
+        if (authApi.getUserFromContext().isEmpty())
             throw new NoPermissionException("Don't have rights to add scrobble");
         if (songService.findByName(scrobbleDto.getSong().getName()).isEmpty()) {
             Song song = Song.builder()
@@ -49,13 +51,13 @@ public class ScrobbleService {
             songService.save(song);
             return save(Scrobble.builder()
                     .song(song)
-                    .user(userService.findById(authService.getUserFromContext().get().getId()).orElseThrow())
+                    .user(userApi.findById(authApi.getUserFromContext().get().getId()).orElseThrow())
                     .date(scrobbleDto.getDate())
                     .build());
         } else {
             Scrobble scrobble = Scrobble.builder()
                     .song(songService.findByName(scrobbleDto.getSong().getName()).get())
-                    .user(userService.findById(authService.getUserFromContext().get().getId()).orElseThrow())
+                    .user(userApi.findById(authApi.getUserFromContext().get().getId()).orElseThrow())
                     .date(scrobbleDto.getDate())
                     .build();
             return save(scrobble);
@@ -65,9 +67,9 @@ public class ScrobbleService {
     public ScrobbleAnswerDto getStatistic(ScrobbleRequestDto requestDto) {
         String username;
         if (requestDto.getUsername() == null) {
-            if (authService.getUserFromContext().isEmpty())
+            if (authApi.getUserFromContext().isEmpty())
                 throw new NoPermissionException("You have to be authorized to get your stats");
-            username = authService.getUserFromContext().get().getUsername();
+            username = authApi.getUserFromContext().get().getUsername();
         } else username = requestDto.getUsername();
         switch (requestDto.getRequestTarget()) {
             case "Song": {

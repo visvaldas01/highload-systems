@@ -15,6 +15,7 @@ import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.model.entity.User;
 import ru.ifmo.highloadsystems.recommendation.Recommendation;
 import ru.ifmo.highloadsystems.repository.SongRepository;
+import ru.ifmo.highloadsystems.rest.AuthApi;
 
 import java.util.*;
 
@@ -23,7 +24,7 @@ import java.util.*;
 public class SongService {
     private final SongRepository songRepository;
     private final MusicianService musicianService;
-    private final AuthService authService;
+    private final AuthApi authApi;
     private final RoleService roleService;
 
     public Page<Song> getAll(PageRequest of) {
@@ -71,7 +72,7 @@ public class SongService {
     }
 
     public Song recommend() {
-        Optional<User> user = authService.getUserFromContext();
+        Optional<User> user = authApi.getUserFromContext();
         if (user.isPresent()) {
             Recommendation rec = new Recommendation(user.get().getSongs(), songRepository);
             return switch (roleService.getUserRole().getName()) {

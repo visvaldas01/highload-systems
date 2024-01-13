@@ -1,4 +1,4 @@
-package ru.ifmo.highloadsystems.service;
+package ru.ifmo.user.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
-import ru.ifmo.highloadsystems.model.entity.User;
-import ru.ifmo.highloadsystems.repository.UserRepository;
+import ru.ifmo.user.model.dto.RegistrationUserDto;
+import ru.ifmo.user.model.entity.User;
+import ru.ifmo.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;

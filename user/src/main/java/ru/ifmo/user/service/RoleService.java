@@ -1,9 +1,9 @@
-package ru.ifmo.highloadsystems.service;
+package ru.ifmo.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.ifmo.highloadsystems.model.entity.Role;
-import ru.ifmo.highloadsystems.repository.RoleRepository;
+import ru.ifmo.user.model.entity.Role;
+import ru.ifmo.user.repository.RoleRepository;
 
 @Service
 @RequiredArgsConstructor

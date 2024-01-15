@@ -22,6 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createNewUser(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
         return authService.createNewUser(registrationUserDto);
     }

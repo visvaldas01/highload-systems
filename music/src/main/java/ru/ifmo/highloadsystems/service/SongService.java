@@ -16,6 +16,7 @@ import ru.ifmo.highloadsystems.model.entity.User;
 import ru.ifmo.highloadsystems.recommendation.Recommendation;
 import ru.ifmo.highloadsystems.repository.SongRepository;
 import ru.ifmo.highloadsystems.rest.AuthApi;
+import ru.ifmo.highloadsystems.rest.RoleApi;
 
 import java.util.*;
 
@@ -25,7 +26,7 @@ public class SongService {
     private final SongRepository songRepository;
     private final MusicianService musicianService;
     private final AuthApi authApi;
-    private final RoleService roleService;
+    private final RoleApi roleApi;
 
     public Page<Song> getAll(PageRequest of) {
         return songRepository.findAll(of);
@@ -75,7 +76,7 @@ public class SongService {
         Optional<User> user = authApi.getUserFromContext();
         if (user.isPresent()) {
             Recommendation rec = new Recommendation(user.get().getSongs(), songRepository);
-            return switch (roleService.getUserRole().getName()) {
+            return switch (roleApi.getUserRole().getName()) {
                 case "ROLE_USER" -> rec.GetNextSong(0);
                 case "ROLE_ADMIN" -> rec.GetNextSong(-1);
                 default -> throw new NoPermissionException("You don't have permission to get recommendation");

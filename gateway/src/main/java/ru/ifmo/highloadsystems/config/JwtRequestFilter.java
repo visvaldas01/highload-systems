@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
+import ru.ifmo.highloadsystems.rest.AuthApi;
+import ru.ifmo.highloadsystems.rest.JwtApi;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -23,8 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
-
-    private final JwtTokensUtils jwtTokensUtils;
+    @Autowired
+    private JwtApi jwtApi;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
@@ -36,7 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
             try {
-                username = jwtTokensUtils.getUsername(jwt);
+                username = jwtApi.getUsername(jwt);
             } catch (ExpiredJwtException e) {
                 log.debug("The token lifetime has expired");
             } catch (SignatureException e) {
@@ -48,7 +50,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             var token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
-                    jwtTokensUtils.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                    jwtApi.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }

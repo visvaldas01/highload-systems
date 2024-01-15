@@ -12,12 +12,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.stereotype.Component;
-
+import ru.ifmo.highloadsystems.rest.UserApi;
+import ru.ifmo.highloadsystems.service.UserService;
+import reactor.core.publisher.Mono;
+import org.springframework.security.config.web.server.ServerHttpSecurity.CorsSpec;
+import org.springframework.security.config.web.server.ServerHttpSecurity.CsrfSpec;
 
 @Component
 @EnableWebSecurity
@@ -26,9 +32,17 @@ public class SecurityConfig {
     private UserService userService;
     private JwtRequestFilter jwtRequestFilter;
 
+    private AuthAddFilter filter;
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setFilter(AuthAddFilter filter)
+    {
+        this.filter = filter;
     }
 
     @Autowired
@@ -38,19 +52,22 @@ public class SecurityConfig {
 
     @SneakyThrows
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .sessionManagement(
-                        sessMan -> sessMan.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .exceptionHandling(
-                        exceptionHandling -> exceptionHandling.authenticationEntryPoint(
-                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
-                        )
-                )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(req -> req
+                        //.requestMatchers("/albums/**").hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers("/musicians").hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers("/scrobbles").hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers("/scrobbles/stats").permitAll()
+                        //.requestMatchers("/songs").hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers("/songs/add_to").hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers("/songs/recommendations").permitAll()
+                        //.requestMatchers("/tags/**").hasAnyRole("USER", "ADMIN")
+                        //.requestMatchers("/tagGroups/**").hasAnyRole("USER", "ADMIN")
+                        .anyRequest().permitAll())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

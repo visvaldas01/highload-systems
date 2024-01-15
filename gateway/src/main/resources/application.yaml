@@ -6,17 +6,17 @@ spring:
     name: gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-#      routes:
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
 #        - id: sber
 #          uri: lb://samokat
 #          predicates:
 #            - Path=/api/best/*
 #            - Method=GET
-#
+
 #        - id: itmo
 #          uri: lb://delivery
 #          predicates:

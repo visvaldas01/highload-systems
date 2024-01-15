@@ -1,10 +1,12 @@
 package ru.ifmo.highloadsystems.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import jakarta.validation.Valid;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
 import ru.ifmo.highloadsystems.service.AuthService;
@@ -22,9 +24,14 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createNewUser(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
         return authService.createNewUser(registrationUserDto);
+    }
+
+    @PostMapping("/test")
+    public String test() {
+        System.out.println("aaaaaaaa");
+        return "aaaaaa";
     }
 
 }

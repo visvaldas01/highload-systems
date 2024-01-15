@@ -9,4 +9,4 @@ COPY . .
 
 RUN ./gradlew build -i --stacktrace -x test
 
-ENTRYPOINT ["java", "-jar", "/app/build/libs/user-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/user/build/libs/user-0.0.1-SNAPSHOT.jar"]

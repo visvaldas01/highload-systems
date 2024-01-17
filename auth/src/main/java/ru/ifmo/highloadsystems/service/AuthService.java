@@ -15,6 +15,7 @@ import ru.ifmo.highloadsystems.model.entity.User;
 import ru.ifmo.highloadsystems.rest.UserApi;
 import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service

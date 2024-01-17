@@ -9,6 +9,8 @@ import ru.ifmo.highloadsystems.model.dto.JwtRequest;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
 import ru.ifmo.highloadsystems.service.AuthService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -22,7 +24,6 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createNewUser(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
         return authService.createNewUser(registrationUserDto);
     }

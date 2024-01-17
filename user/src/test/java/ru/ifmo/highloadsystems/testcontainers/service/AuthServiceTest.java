@@ -14,7 +14,6 @@ import ru.ifmo.user.model.dto.JwtRequest;
 import ru.ifmo.user.model.dto.JwtResponse;
 import ru.ifmo.user.model.dto.RegistrationUserDto;
 import ru.ifmo.user.service.UserService;
-import ru.ifmo.user.utils.JwtTokensUtils;
 
 import java.util.List;
 

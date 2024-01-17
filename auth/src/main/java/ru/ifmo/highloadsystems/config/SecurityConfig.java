@@ -32,9 +32,17 @@ public class SecurityConfig {
     private UserService userService;
     private JwtRequestFilter jwtRequestFilter;
 
+    private AuthAddFilter filter;
+
     @Autowired
-    public void setUserService(UserApi userApi) {
+    public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setFilter(AuthAddFilter filter)
+    {
+        this.filter = filter;
     }
 
     @Autowired
@@ -44,25 +52,22 @@ public class SecurityConfig {
 
     @SneakyThrows
     @Bean
-    public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
-                .authorizeExchange(exchange -> exchange
-                        .pathMatchers("/albums/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .pathMatchers("/musicians").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .pathMatchers("/scrobbles").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .pathMatchers("/scrobbles/stats").permitAll()
-                        .pathMatchers("/songs").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .pathMatchers("/songs/add_to").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .pathMatchers("/songs/recommendations").permitAll()
-                        .pathMatchers("/tags/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .pathMatchers("/tagGroups/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .anyExchange().permitAll())
-                .exceptionHandling(
-                        exception -> exception
-                                .authenticationEntryPoint((swe, e) -> Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED)))
-                                .accessDeniedHandler((swe, e) -> Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN))))
-                .csrf(CsrfSpec::disable)
-                .cors(CorsSpec::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/albums/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/musicians").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/scrobbles").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/scrobbles/stats").permitAll()
+                        .requestMatchers("/songs").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/songs/add_to").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/songs/recommendations").permitAll()
+                        .requestMatchers("/tags/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/tagGroups/**").hasAnyRole("USER", "ADMIN")
+                        .anyRequest().permitAll())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

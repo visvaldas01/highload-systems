@@ -34,7 +34,7 @@ public class Filter extends AbstractGatewayFilterFactory<Filter.Config> {
                 ServerHttpResponse response = exchange.getResponse();
                 Optional<User> user = authApi.getUserFromContext();
                 if (user.isPresent())
-                    response.getHeaders().add("username", "user1");
+                    response.getHeaders().add("username", user.get().getUsername());
             }));
         });
 

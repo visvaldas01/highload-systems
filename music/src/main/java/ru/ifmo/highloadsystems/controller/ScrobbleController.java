@@ -11,6 +11,7 @@ import ru.ifmo.highloadsystems.model.dto.ScrobbleRequestDto;
 import ru.ifmo.highloadsystems.model.entity.Scrobble;
 import ru.ifmo.highloadsystems.service.ScrobbleService;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class ScrobbleController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Scrobble> addScrobble(@Valid @RequestBody ScrobbleDto scrobbleDto) {
+    public ResponseEntity<Scrobble> addScrobble(@Valid @RequestBody ScrobbleDto scrobbleDto, Principal principal) {
         return ResponseEntity.ok(scrobbleService.addScrobble(scrobbleDto));
     }
 

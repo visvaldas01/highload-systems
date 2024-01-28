@@ -24,10 +24,10 @@ public class AuthService {
 
     private final UserApi userApi;
     private final JwtTokensUtils jwtTokensUtils;
-    private final AuthenticationManager authenticationManager;
+//    private final AuthenticationManager authenticationManager;
 
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
+//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
 
         var userDetails = userApi.loadUserByUsername(authRequest.username());
         var token = jwtTokensUtils.generateToken(userDetails);

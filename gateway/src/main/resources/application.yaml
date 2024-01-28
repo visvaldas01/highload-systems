@@ -8,15 +8,19 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+#          enabled: true
           lower-case-service-id: true
-#      routes:
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
 #        - id: sber
 #          uri: lb://samokat
 #          predicates:
 #            - Path=/api/best/*
 #            - Method=GET
-#
+
 #        - id: itmo
 #          uri: lb://delivery
 #          predicates:
@@ -27,3 +31,5 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}
+  instance:
+    preferIpAddress: true

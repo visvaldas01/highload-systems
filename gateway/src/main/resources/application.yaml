@@ -11,6 +11,16 @@ spring:
           uri: lb://auth
           predicates:
             - Path=/auth/**
+
+        - id: user
+          uri: lb://user
+          predicates:
+            - Path=/users/**, /role/**
+
+        - id: music
+          uri: lb://music
+          predicates:
+            - Path=/albums/**, /musicians/**, /scrobbles/**, /songs/**, /tags/**, /tagGroups/**
 #        - id: sber
 #          uri: lb://samokat
 #          predicates:

@@ -3,7 +3,6 @@ package ru.ifmo.highloadsystems.config;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -12,18 +11,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.stereotype.Component;
-import ru.ifmo.highloadsystems.rest.UserApi;
 import ru.ifmo.highloadsystems.service.UserService;
-import reactor.core.publisher.Mono;
-import org.springframework.security.config.web.server.ServerHttpSecurity.CorsSpec;
-import org.springframework.security.config.web.server.ServerHttpSecurity.CsrfSpec;
 
 @Component
 @EnableWebSecurity

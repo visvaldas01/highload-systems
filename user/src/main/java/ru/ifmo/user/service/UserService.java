@@ -74,9 +74,4 @@ public class UserService implements UserDetailsService {
     public void deleteAll() {
         userRepository.deleteAll();
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

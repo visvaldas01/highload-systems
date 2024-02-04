@@ -16,8 +16,7 @@ import ru.ifmo.highloadsystems.model.entity.User;
 import java.util.List;
 import java.util.Optional;
 
-@FeignClient(name = "role-service",
-        url = "localhost:8082",
+@FeignClient(name = "user",
         configuration = FeignConfig.class)
 public interface RoleApi {
     @GetMapping(path = "/get-user-role", produces =  MediaType.APPLICATION_JSON)

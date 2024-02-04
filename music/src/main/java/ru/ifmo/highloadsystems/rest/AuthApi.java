@@ -20,8 +20,7 @@ import ru.ifmo.highloadsystems.model.entity.User;
 import java.util.List;
 import java.util.Optional;
 
-@FeignClient(name = "user-service",
-        url = "localhost:8080",
+@FeignClient(name = "auth",
         configuration = FeignConfig.class)
 public interface AuthApi {
     @GetMapping(path = "/create-auth-token", produces =  MediaType.APPLICATION_JSON)

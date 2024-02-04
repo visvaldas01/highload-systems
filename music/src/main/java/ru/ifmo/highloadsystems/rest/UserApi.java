@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@FeignClient(name = "user-service",
-        url = "localhost:8082",
+@FeignClient(name = "user",
         configuration = FeignConfig.class)
 public interface UserApi {
     @GetMapping(path = "/find-by-username", produces =  MediaType.APPLICATION_JSON)

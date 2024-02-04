@@ -1,7 +1,6 @@
 package ru.ifmo.highloadsystems.rest;
 
 
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import jakarta.ws.rs.core.MediaType;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +19,6 @@ import java.util.Optional;
         configuration = FeignConfig.class)
 public interface RoleApi {
     @GetMapping(path = "/get-user-role", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "aa", fallbackMethod = "getUserRole")
     Role getUserRole();
 
     @Component

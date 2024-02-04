@@ -1,7 +1,6 @@
 package ru.ifmo.highloadsystems.rest;
 
 
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import jakarta.ws.rs.core.MediaType;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +23,12 @@ import java.util.Optional;
         configuration = FeignConfig.class)
 public interface AuthApi {
     @GetMapping(path = "/create-auth-token", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "a", fallbackMethod = "createAuthToken")
     ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest);
 
     @GetMapping(path = "/create-new-user", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "b", fallbackMethod = "createNewUser")
     ResponseEntity<?> createNewUser(@RequestBody RegistrationUserDto registrationUserDto);
 
     @GetMapping(path = "/get-user-from-context", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "c", fallbackMethod = "getUserFromContext")
     public Optional<User> getUserFromContext();
 
     @Component

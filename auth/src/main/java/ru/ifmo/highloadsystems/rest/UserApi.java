@@ -1,7 +1,6 @@
 package ru.ifmo.highloadsystems.rest;
 
 
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import jakarta.ws.rs.core.MediaType;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,27 +18,21 @@ import java.util.Optional;
         configuration = FeignConfig.class)
 public interface UserApi {
     @GetMapping(path = "/find-by-username", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "a", fallbackMethod = "findByUsername")
     Optional<User> findByUsername(@RequestBody String username);
 
     @GetMapping(path = "/load-user-bu-username", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "b", fallbackMethod = "loadUserByUsername")
     UserDetails loadUserByUsername(@RequestBody String username) throws UsernameNotFoundException;
 
     @GetMapping(path = "/get-new-user", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "c", fallbackMethod = "getNewUser")
     User getNewUser(@RequestBody RegistrationUserDto registrationUserDto);
 
     @GetMapping(path = "/get-all", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "d", fallbackMethod = "getAll")
     List<User> getAll();
 
     @GetMapping(path = "/find-by-id", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "e", fallbackMethod = "findById")
     Optional<User> findById(@RequestBody Long id);
 
     @GetMapping(path = "/delete-all", produces =  MediaType.APPLICATION_JSON)
-    @Bulkhead(name = "c", fallbackMethod = "deleteAll")
     void deleteAll();
 
     @Component

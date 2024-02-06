@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
+import ru.ifmo.highloadsystems.model.entity.Role;
 import ru.ifmo.highloadsystems.model.entity.User;
 
 import java.util.List;
@@ -35,6 +36,9 @@ public interface UserApi {
     @GetMapping(path = "/users/delete-all", produces =  MediaType.APPLICATION_JSON)
     void deleteAll();
 
+    @GetMapping(path = "/role/get-user-role", produces =  MediaType.APPLICATION_JSON)
+    Role getUserRole();
+
     @Component
     class UserApiFallback implements UserApi{
 
@@ -47,7 +51,6 @@ public interface UserApi {
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
             return null;
         }
-
 
         @Override
         public User getNewUser(RegistrationUserDto registrationUserDto) {
@@ -68,6 +71,12 @@ public interface UserApi {
         @Override
         public void deleteAll() {
 
+        }
+
+        @Override
+        public Role getUserRole()
+        {
+            return null;
         }
     }
 }

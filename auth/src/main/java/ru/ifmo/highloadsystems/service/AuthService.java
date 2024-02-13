@@ -30,7 +30,7 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
 
         var userDetails = userApi.loadUserByUsername(authRequest.username());
-        var token = jwtTokensUtils.generateToken(userDetails);
+        var token = jwtTokensUtils.generateToken(userDetails.getBody());
         return ResponseEntity.ok(new JwtResponse(token));
 
     }
@@ -39,16 +39,19 @@ public class AuthService {
         if (!registrationUserDto.password().equals(registrationUserDto.confirmPassword())) {
             throw new RegisterException("Passwords not match");
         }
-        if (userApi.findByUsername(registrationUserDto.username()).isPresent()) {
+        System.out.println("1");
+        ResponseEntity<Optional<User>> responseEntity = userApi.findByUsername(registrationUserDto.username());
+        if (responseEntity.getBody().isPresent()) {
             throw new RegisterException("User with this name already exists");
         }
-
-        var user = userApi.getNewUser(registrationUserDto);
+        System.out.println("2");
+        var user = userApi.getNewUser(registrationUserDto).getBody();
+        System.out.println("3");
         return ResponseEntity.ok(user.getUsername());
     }
 
     public Optional<User> getUserFromContext() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userApi.findByUsername(name);
+        return userApi.findByUsername(name).getBody();
     }
 }

@@ -28,11 +28,11 @@ public class ScrobbleController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Scrobble> addScrobble(@Valid @RequestBody ScrobbleDto scrobbleDto, Principal principal) {
-        return ResponseEntity.ok(scrobbleService.addScrobble(scrobbleDto));
+        return ResponseEntity.ok(scrobbleService.addScrobble(scrobbleDto, principal.getName()));
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<ScrobbleAnswerDto> getStat(@Valid @RequestBody ScrobbleRequestDto scrobbleRequestDto) {
-        return ResponseEntity.ok(scrobbleService.getStatistic(scrobbleRequestDto));
+    public ResponseEntity<ScrobbleAnswerDto> getStat(@Valid @RequestBody ScrobbleRequestDto scrobbleRequestDto, Principal principal) {
+        return ResponseEntity.ok(scrobbleService.getStatistic(scrobbleRequestDto, principal));
     }
 }

@@ -27,11 +27,4 @@ public class AuthController {
     public ResponseEntity<?> createNewUser(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
         return authService.createNewUser(registrationUserDto);
     }
-
-    @PostMapping("/test")
-    public String test() {
-        System.out.println("aaaaaaaa");
-        return "aaaaaa";
-    }
-
 }

@@ -15,7 +15,6 @@ import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.model.entity.User;
 import ru.ifmo.highloadsystems.recommendation.Recommendation;
 import ru.ifmo.highloadsystems.repository.SongRepository;
-import ru.ifmo.highloadsystems.rest.AuthApi;
 import ru.ifmo.highloadsystems.rest.UserApi;
 
 import java.util.*;
@@ -25,7 +24,6 @@ import java.util.*;
 public class SongService {
     private final SongRepository songRepository;
     private final MusicianService musicianService;
-    private final AuthApi authApi;
     private final UserApi userApi;
 
     public Page<Song> getAll(PageRequest of) {
@@ -72,11 +70,11 @@ public class SongService {
         } else throw new NothingToAddException("This song does not exist");
     }
 
-    public Song recommend() {
-        Optional<User> user = authApi.getUserFromContext();
+    public Song recommend(String username) {
+        Optional<User> user = userApi.findByUsername(username).getBody();
         if (user.isPresent()) {
             Recommendation rec = new Recommendation(user.get().getSongs(), songRepository);
-            return switch (userApi.getUserRole().getName()) {
+            return switch (userApi.getUserRole().getBody().getName()) {
                 case "ROLE_USER" -> rec.GetNextSong(0);
                 case "ROLE_ADMIN" -> rec.GetNextSong(-1);
                 default -> throw new NoPermissionException("You don't have permission to get recommendation");

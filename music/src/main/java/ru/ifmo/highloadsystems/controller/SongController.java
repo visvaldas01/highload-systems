@@ -11,6 +11,8 @@ import ru.ifmo.highloadsystems.model.dto.SongDto;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.service.SongService;
 
+import java.security.Principal;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/songs")
@@ -40,7 +42,7 @@ public class SongController {
     }
 
     @GetMapping("/recommendations")
-    public ResponseEntity<?> recommend() {
-        return ResponseEntity.ok(songService.recommend());
+    public ResponseEntity<?> recommend(Principal principal) {
+        return ResponseEntity.ok(songService.recommend(principal.getName()));
     }
 }

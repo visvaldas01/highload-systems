@@ -18,25 +18,25 @@ public class UserService implements UserDetailsService {
     private UserApi userApi;
 
     public Optional<User> findByUsername(String username) {
-        return userApi.findByUsername(username);
+        return userApi.findByUsername(username).getBody();
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userApi.loadUserByUsername(username);
+        return userApi.loadUserByUsername(username).getBody();
     }
 
     public User getNewUser(RegistrationUserDto registrationUserDto) {
-        return userApi.getNewUser(registrationUserDto);
+        return userApi.getNewUser(registrationUserDto).getBody();
     }
 
     public List<User> getAll() {
-        return userApi.getAll();
+        return userApi.getAll().getBody();
     }
 
     public Optional<User> findById(Long id) {
-        return userApi.findById(id);
+        return userApi.findById(id).getBody();
     }
 
     public void deleteAll() {

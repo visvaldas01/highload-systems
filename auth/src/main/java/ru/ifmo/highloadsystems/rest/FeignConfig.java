@@ -32,15 +32,4 @@ public class FeignConfig {
                         .circuitBreakerConfig(circuitBreakerConfig)
                         .timeLimiterConfig(timeLimiterConfig).build());
     }
-
-    @Bean
-    public Decoder decoder(ObjectMapper objectMapper) {
-        return new JacksonDecoder(objectMapper);
-    }
-
-    @Bean
-    public Encoder encoder(ObjectMapper objectMapper) {
-        return new JacksonEncoder(objectMapper);
-    }
-
 }

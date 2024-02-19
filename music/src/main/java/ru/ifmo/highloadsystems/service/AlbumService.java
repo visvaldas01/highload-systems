@@ -14,6 +14,7 @@ import ru.ifmo.highloadsystems.model.entity.Musician;
 import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.repository.AlbumRepository;
+import ru.ifmo.highloadsystems.rest.SongApi;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AlbumService {
     private final AlbumRepository albumRepository;
-    private final SongService songService;
+    private final SongApi songApi;
     private final TagService tagService;
     private final MusicianService musicianService;
 
@@ -55,11 +56,11 @@ public class AlbumService {
 
             if (albumDto.getSongs() != null && !albumDto.getSongs().isEmpty()) {
                 for (SongDto song : albumDto.getSongs()) {
-                    Optional<Song> songOptional = songService.findByName(song.getName());
+                    Optional<Song> songOptional = songApi.findByName(song.getName()).getBody();
                     if (songOptional.isPresent()) modifiableAlbum.getSongs().add(songOptional.get());
                     else {
-                        songService.add(song);
-                        modifiableAlbum.getSongs().add(songService.findByName(song.getName()).orElseThrow());
+                        songApi.add(song);
+                        modifiableAlbum.getSongs().add(songApi.findByName(song.getName()).getBody().orElseThrow());
                     }
                 }
             } else if (albumDto.getTags() != null && !albumDto.getTags().isEmpty()) {

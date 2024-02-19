@@ -9,6 +9,7 @@ import ru.ifmo.highloadsystems.model.dto.AlbumDto;
 import ru.ifmo.highloadsystems.model.entity.Album;
 import ru.ifmo.highloadsystems.service.AlbumService;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -34,5 +35,11 @@ public class AlbumController {
     public ResponseEntity<String> addToAlbum(@Valid @RequestBody AlbumDto album) {
         albumService.addToAlbum(album);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/from-dto")
+    ResponseEntity<Collection<Album>> fromDto(Collection<AlbumDto> dto)
+    {
+        return ResponseEntity.ok(albumService.fromDto(dto));
     }
 }

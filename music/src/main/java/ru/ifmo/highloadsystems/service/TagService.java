@@ -13,6 +13,7 @@ import ru.ifmo.highloadsystems.model.entity.Song;
 import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.model.entity.TagGroup;
 import ru.ifmo.highloadsystems.repository.TagRepository;
+import ru.ifmo.highloadsystems.rest.SongApi;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TagService {
     private final TagRepository tagRepository;
-    private final SongService songService;
+    private final SongApi songApi;
     private final MusicianService musicianService;
     private final TagGroupService tagGroupService;
 
@@ -63,11 +64,11 @@ public class TagService {
                 }
             } else if (tagDto.getSongs() != null && !tagDto.getSongs().isEmpty()) {
                 for (SongDto song : tagDto.getSongs()) {
-                    Optional<Song> songOptional = songService.findByName(song.getName());
+                    Optional<Song> songOptional = songApi.findByName(song.getName()).getBody();
                     if (songOptional.isPresent()) modifiableTag.getSongs().add(songOptional.get());
                     else {
-                        songService.add(song);
-                        modifiableTag.getSongs().add(songService.findByName(song.getName()).orElseThrow());
+                        songApi.add(song);
+                        modifiableTag.getSongs().add(songApi.findByName(song.getName()).getBody().orElseThrow());
                     }
                 }
             } else throw new NothingToAddException("No data to add in message");

@@ -69,6 +69,34 @@ services:
       - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
 
+  song:
+    container_name: song
+    build: song
+    image: song:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/itmusik
+      - SPRING_DATASOURCE_USERNAME=user-db
+      - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+  scrobble:
+    container_name: scrobble
+    build: scrobble
+    image: scrobble:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/itmusik
+      - SPRING_DATASOURCE_USERNAME=user-db
+      - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
   postgres:
     container_name: postgres
     image: postgres:latest

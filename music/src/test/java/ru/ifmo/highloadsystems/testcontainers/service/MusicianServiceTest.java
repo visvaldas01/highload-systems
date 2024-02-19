@@ -11,7 +11,6 @@ import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.service.AlbumService;
 import ru.ifmo.highloadsystems.service.MusicianService;
-import ru.ifmo.highloadsystems.service.SongService;
 import ru.ifmo.highloadsystems.service.TagService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

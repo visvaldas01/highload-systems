@@ -21,6 +21,16 @@ spring:
           uri: lb://music
           predicates:
             - Path=/albums/**, /musicians/**, /scrobbles/**, /songs/**, /tags/**, /tagGroups/**
+
+        - id: song
+          uri: lb://song
+          predicates:
+            - Path=/songs/**
+
+        - id: scrobble
+          uri: lb://scrobble
+          predicates:
+            - Path=/scrobbles/**
 #        - id: sber
 #          uri: lb://samokat
 #          predicates:

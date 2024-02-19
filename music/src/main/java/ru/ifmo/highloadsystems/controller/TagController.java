@@ -9,6 +9,7 @@ import ru.ifmo.highloadsystems.model.dto.TagDto;
 import ru.ifmo.highloadsystems.model.entity.Tag;
 import ru.ifmo.highloadsystems.service.TagService;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -35,5 +36,11 @@ public class TagController {
     public ResponseEntity<?> addToTag(@Valid @RequestBody TagDto tag) {
         tagService.addTag(tag);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/from-dto")
+    ResponseEntity<Collection<Tag>> fromDto(Collection<TagDto> dto)
+    {
+        return ResponseEntity.ok(tagService.fromDto(dto));
     }
 }

@@ -64,11 +64,11 @@ public class TagService {
                 }
             } else if (tagDto.getSongs() != null && !tagDto.getSongs().isEmpty()) {
                 for (SongDto song : tagDto.getSongs()) {
-                    Optional<Song> songOptional = songApi.findByName(song.getName()).getBody();
+                    Optional<Song> songOptional = songApi.findByName(song.getName()).block();
                     if (songOptional.isPresent()) modifiableTag.getSongs().add(songOptional.get());
                     else {
                         songApi.add(song);
-                        modifiableTag.getSongs().add(songApi.findByName(song.getName()).getBody().orElseThrow());
+                        modifiableTag.getSongs().add(songApi.findByName(song.getName()).block().orElseThrow());
                     }
                 }
             } else throw new NothingToAddException("No data to add in message");

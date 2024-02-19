@@ -56,11 +56,11 @@ public class AlbumService {
 
             if (albumDto.getSongs() != null && !albumDto.getSongs().isEmpty()) {
                 for (SongDto song : albumDto.getSongs()) {
-                    Optional<Song> songOptional = songApi.findByName(song.getName()).getBody();
+                    Optional<Song> songOptional = songApi.findByName(song.getName()).block();
                     if (songOptional.isPresent()) modifiableAlbum.getSongs().add(songOptional.get());
                     else {
                         songApi.add(song);
-                        modifiableAlbum.getSongs().add(songApi.findByName(song.getName()).getBody().orElseThrow());
+                        modifiableAlbum.getSongs().add(songApi.findByName(song.getName()).block().get());
                     }
                 }
             } else if (albumDto.getTags() != null && !albumDto.getTags().isEmpty()) {

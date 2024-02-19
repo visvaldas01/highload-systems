@@ -41,7 +41,7 @@ public class ScrobbleService {
         Optional<User> user = userApi.findByUsername(username).getBody();
         if (!user.isPresent())
             throw new NoPermissionException("Don't have rights to add scrobble");
-        if (songApi.findByName(scrobbleDto.getSong().getName()).getBody().isEmpty()) {
+        if (songApi.findByName(scrobbleDto.getSong().getName()).block().isEmpty()) {
             Song song = Song.builder()
                     .musicians(musicApi.fromDtoMusician(scrobbleDto.getSong().getMusician()).getBody())
                     .albums(musicApi.fromDtoAlbum(scrobbleDto.getSong().getAlbum()).getBody())
@@ -56,7 +56,7 @@ public class ScrobbleService {
                     .build());
         } else {
             Scrobble scrobble = Scrobble.builder()
-                    .song(songApi.findByName(scrobbleDto.getSong().getName()).getBody().get())
+                    .song(songApi.findByName(scrobbleDto.getSong().getName()).block().get())
                     .user(user.get())
                     .date(scrobbleDto.getDate())
                     .build();

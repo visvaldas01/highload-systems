@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import reactor.core.publisher.Mono;
 import ru.ifmo.highloadsystems.exception.AlreadyExistException;
 import ru.ifmo.highloadsystems.exception.NoPermissionException;
 import ru.ifmo.highloadsystems.exception.NothingToAddException;
@@ -31,8 +32,8 @@ import java.util.Optional;
         configuration = FeignConfig.class)
 public interface SongApi {
     @PostMapping(path = "/songs/find-by-name")
-    ResponseEntity<Optional<Song>> findByName(String name);
+    Mono<Optional<Song>> findByName(String name);
 
     @PostMapping(path = "/songs/save")
-    void save(Song song);
+    Mono<?> save(Song song);
 }

@@ -28,6 +28,11 @@ spring:
   main:
     allow-circular-references: true
 
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
 eureka:
   client:
     service-url:

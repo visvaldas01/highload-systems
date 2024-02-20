@@ -19,8 +19,6 @@ public class MusicianServiceTest {
     @Autowired
     private AlbumService albumService;
     @Autowired
-    private SongService songService;
-    @Autowired
     private TagService tagService;
     @Autowired
     private MusicianService musicianService;
@@ -42,7 +40,6 @@ public class MusicianServiceTest {
     @AfterEach
     void clean() {
         albumService.deleteAll();
-        songService.deleteAll();
         tagService.deleteAll();
         musicianService.deleteAll();
     }

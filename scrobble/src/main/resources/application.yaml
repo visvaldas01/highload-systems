@@ -8,16 +8,11 @@ jwt:
 spring:
   application:
     name: scrobble
-  jpa:
-    show-sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: false
-    properties:
-      hibernate:
-        show_sql=true:
-    hibernate:
-      ddl-auto: none
+
+  r2dbc:
+    password: kt^#54hfff@%*t53gfhj
+    username: user-db
+    url: r2dbc:postgresql://localhost:5432/itmusikЦ
 
   datasource:
     username: user-db

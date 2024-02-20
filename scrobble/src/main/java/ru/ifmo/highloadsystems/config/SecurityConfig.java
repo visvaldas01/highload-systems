@@ -4,55 +4,45 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.WebFilter;
+import reactor.core.publisher.Mono;
 import ru.ifmo.highloadsystems.service.UserService;
 
 @Component
-@EnableWebSecurity
+@EnableWebFluxSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
+    @Autowired
     private UserService userService;
-    private JwtRequestFilter jwtRequestFilter;
-
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+    private WebFilter jwtRequestFilter;
 
-    @Autowired
-    public void setJwtRequestFilter(JwtRequestFilter jwtRequestFilter) {
-        this.jwtRequestFilter = jwtRequestFilter;
-    }
-
-    @SneakyThrows
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req
-                        //.requestMatchers("/albums/**").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/musicians").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/scrobbles").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/scrobbles/stats").permitAll()
-                        //.requestMatchers("/songs").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/songs/add_to").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/songs/recommendations").permitAll()
-                        //.requestMatchers("/tags/**").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/tagGroups/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().permitAll())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
+    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
+        return http
+                .authorizeExchange(exchanges ->
+                exchanges.anyExchange().authenticated())
+            .csrf().disable()
+            .httpBasic().disable()
+            .formLogin().disable()
+            .addFilterBefore(jwtRequestFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .build();
     }
 
     @Bean
@@ -69,7 +59,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    protected ReactiveAuthenticationManager reactiveAuthenticationManager() {
+        return Mono::just;
     }
 }

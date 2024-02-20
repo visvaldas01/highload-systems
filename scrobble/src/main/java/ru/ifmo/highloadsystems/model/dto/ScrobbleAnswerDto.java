@@ -7,5 +7,5 @@ import java.util.Collection;
 @Data
 public class ScrobbleAnswerDto {
     Collection<Integer> nums;
-    Collection<String> names;
+    Collection<Long> names;
 }

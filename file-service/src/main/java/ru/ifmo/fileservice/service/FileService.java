@@ -83,7 +83,7 @@ public class FileService {
     public Resource loadAsResource(String filename) throws NoSuchElementException {
         return new ByteArrayResource(loadDataByName(filename).data().getBytes());
     }
-    
+
 //    public Resource loadAsResourceById(Long fileId) throws NoSuchElementException {
 //        return new ByteArrayResource(loadDataById(fileId).data().getBytes());
 //    }
@@ -112,4 +112,13 @@ public class FileService {
 //        return file.getOwner().equals(username);
 //    }
 
+    public boolean isOwnedByUser(String username, String filename) throws NoSuchElementException {
+        File file = fileRepository.findByName(filename).orElseThrow();
+        return file.getOwner().equals(username);
+    }
+
+    public boolean isOwnedByUser(String username, Long id) throws NoSuchElementException {
+        File file = fileRepository.findById(id).orElseThrow();
+        return file.getOwner().equals(username);
+    }
 }

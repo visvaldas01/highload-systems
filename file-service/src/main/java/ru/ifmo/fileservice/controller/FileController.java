@@ -3,17 +3,17 @@ package ru.ifmo.fileservice.controller;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ru.ifmo.fileservice.exception.StorageException;
 import ru.ifmo.fileservice.model.dto.FileDataResponse;
 import ru.ifmo.fileservice.model.dto.FileInfoResponse;
-import ru.ifmo.fileservice.model.entity.File;
 import ru.ifmo.fileservice.service.FileService;
 
 import java.security.Principal;
@@ -22,15 +22,18 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/files")
 public class FileController {
     private final FileService fileService;
 
-    @GetMapping("/")
+    @GetMapping
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<FileInfoResponse>> listUploadedFiles() {
         return ResponseEntity.ok(fileService.findAll());
     }
 
-    @GetMapping("/files/{id}/info")
+    @GetMapping("/{id}/info")
+//    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #id)")
     public ResponseEntity<FileInfoResponse> getFileInfoById(@PathVariable @Positive @NotNull Long id) {
         try {
             FileInfoResponse fileInfoResponse = fileService.loadInfoById(id);
@@ -40,7 +43,8 @@ public class FileController {
         }
     }
 
-    @GetMapping("/files/{id}/content")
+    @GetMapping("/{id}/data")
+//    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #id)")
     public ResponseEntity<FileDataResponse> getFileDataById(@PathVariable @Positive @NotNull Long id) {
         try {
             FileDataResponse fileDataResponse = fileService.loadDataById(id);
@@ -52,6 +56,7 @@ public class FileController {
 
     @GetMapping("/download/{filename:.+}")
     @ResponseBody
+//    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #filename)")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         try {
             Resource file = fileService.loadAsResource(filename);
@@ -63,6 +68,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal) {
         try {
             fileService.store(file, principal.getName());

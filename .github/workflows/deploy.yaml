@@ -1,0 +1,25 @@
+name: Publish user
+
+on:
+  push:
+    branches: [ "ci_cd" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_URL }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          script: |
+            cd highload-systems
+            git reset --hard
+            git fetch
+            git checkout origin/ci_cd
+            cd ./scripts
+            ./clean
+            ./start_server

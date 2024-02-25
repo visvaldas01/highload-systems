@@ -40,15 +40,16 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        //.requestMatchers("/albums/**").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/musicians").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/albums/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/musicians").hasAnyRole("USER", "ADMIN")
                         //.requestMatchers("/scrobbles").hasAnyRole("USER", "ADMIN")
                         //.requestMatchers("/scrobbles/stats").permitAll()
                         //.requestMatchers("/songs").hasAnyRole("USER", "ADMIN")
                         //.requestMatchers("/songs/add_to").hasAnyRole("USER", "ADMIN")
                         //.requestMatchers("/songs/recommendations").permitAll()
-                        //.requestMatchers("/tags/**").hasAnyRole("USER", "ADMIN")
-                        //.requestMatchers("/tagGroups/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/tags").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/tags/add_to_tag").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/tagGroups").hasAnyRole("USER", "ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

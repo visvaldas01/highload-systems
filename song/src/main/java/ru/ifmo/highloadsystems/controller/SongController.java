@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -30,7 +29,6 @@ public class SongController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public Mono<?> add(@Valid @RequestBody SongDto songDto) {
         songService.add(songDto);
         return Mono.empty();
@@ -38,7 +36,6 @@ public class SongController {
 
     //TODO
     @PostMapping("/add-to")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public Mono<?> addTo(@Valid @RequestBody SongDto songDto) {
         songService.addTo(songDto);
         return Mono.empty();

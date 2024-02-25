@@ -2,7 +2,6 @@ package ru.ifmo.highloadsystems.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.TagGroupDto;
@@ -23,7 +22,6 @@ public class TagGroupController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> add(@Valid @RequestBody TagGroupDto dto) {
         tagGroupService.add(dto);
         return ResponseEntity.ok().build();

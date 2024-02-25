@@ -12,7 +12,7 @@ spring:
   r2dbc:
     password: kt^#54hfff@%*t53gfhj
     username: user-db
-    url: r2dbc:postgresql://localhost:5432/itmusik
+    url: r2dbc:postgresql://postgres:5432/itmusik
 
 #  datasource:
 #    username: user-db

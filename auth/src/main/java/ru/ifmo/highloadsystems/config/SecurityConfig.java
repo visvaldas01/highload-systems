@@ -58,7 +58,8 @@ public class SecurityConfig {
                         //.requestMatchers("/tags/**").hasAnyRole("USER", "ADMIN")
                         //.requestMatchers("/tagGroups/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().permitAll())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);;
 
         return http.build();
     }

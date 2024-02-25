@@ -1,11 +1,13 @@
 package ru.ifmo.highloadsystems.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
+import ru.ifmo.highloadsystems.model.dto.UserRoleDto;
 import ru.ifmo.highloadsystems.model.entity.User;
 import ru.ifmo.highloadsystems.rest.UserApi;
 
@@ -24,7 +26,12 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userApi.loadUserByUsername(username).getBody();
+        UserRoleDto dto = userApi.loadUserByUsername(username).getBody();
+        return new org.springframework.security.core.userdetails.User(
+                dto.username(),
+                dto.password(),
+                dto.authorities().stream().map(SimpleGrantedAuthority::new).toList()
+        );
     }
 
     public User getNewUser(RegistrationUserDto registrationUserDto) {

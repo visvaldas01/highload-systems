@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.ifmo.user.model.dto.RegistrationUserDto;
+import ru.ifmo.user.model.dto.UserRoleDto;
 import ru.ifmo.user.model.entity.User;
 import ru.ifmo.user.service.UserService;
 
@@ -33,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/load-user-bu-username")
-    ResponseEntity<UserDetails> loadUserByUsername(@RequestBody String username) throws UsernameNotFoundException {
-        return ResponseEntity.ok(userService.loadUserByUsername(username));
+    ResponseEntity<UserRoleDto> loadUserByUsername(@RequestBody String username) throws UsernameNotFoundException {
+        return ResponseEntity.ok(userService.loadUserDtoByUsername(username));
     }
 
     @PostMapping(path = "/get-new-user")

@@ -3,13 +3,13 @@ package ru.ifmo.highloadsystems.rest;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
+import ru.ifmo.highloadsystems.model.dto.UserRoleDto;
 import ru.ifmo.highloadsystems.model.entity.Role;
 import ru.ifmo.highloadsystems.model.entity.User;
 
@@ -23,7 +23,7 @@ public interface UserApi {
     ResponseEntity<Optional<User>> findByUsername(@RequestBody String username);
 
     @PostMapping(path = "/users/load-user-bu-username")
-    ResponseEntity<UserDetails> loadUserByUsername(@RequestBody String username) throws UsernameNotFoundException;
+    ResponseEntity<UserRoleDto> loadUserByUsername(@RequestBody String username) throws UsernameNotFoundException;
 
     @PostMapping(path = "/users/get-new-user")
     ResponseEntity<User> getNewUser(@RequestBody RegistrationUserDto registrationUserDto);

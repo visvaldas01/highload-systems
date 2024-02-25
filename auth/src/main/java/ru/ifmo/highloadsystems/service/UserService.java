@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.ifmo.highloadsystems.model.dto.UserRoleDto;
 import ru.ifmo.highloadsystems.rest.UserApi;
 import ru.ifmo.highloadsystems.model.dto.RegistrationUserDto;
 import ru.ifmo.highloadsystems.model.entity.User;
@@ -28,7 +29,12 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userApi.loadUserByUsername(username).getBody();
+        UserRoleDto dto = userApi.loadUserByUsername(username).getBody();
+        return new org.springframework.security.core.userdetails.User(
+                dto.username(),
+                dto.password(),
+                dto.authorities().stream().map(SimpleGrantedAuthority::new).toList()
+        );
     }
 
     public User getNewUser(RegistrationUserDto registrationUserDto) {

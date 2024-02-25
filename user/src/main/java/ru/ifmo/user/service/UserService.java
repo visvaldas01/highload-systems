@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.ifmo.user.model.dto.RegistrationUserDto;
+import ru.ifmo.user.model.dto.UserRoleDto;
 import ru.ifmo.user.model.entity.User;
 import ru.ifmo.user.repository.UserRepository;
 
@@ -46,13 +47,18 @@ public class UserService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public org.springframework.security.core.userdetails.User loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
                 user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList())
         );
+    }
+
+    public UserRoleDto loadUserDtoByUsername(String username) throws UsernameNotFoundException {
+        var user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+        return new UserRoleDto(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()));
     }
 
     public User getNewUser(RegistrationUserDto registrationUserDto) {

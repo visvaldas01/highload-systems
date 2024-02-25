@@ -3,12 +3,13 @@ package ru.ifmo.fileservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ifmo.fileservice.exception.StorageException;
+import ru.ifmo.fileservice.model.dto.FileDataResponse;
 import ru.ifmo.fileservice.model.dto.FileInfoResponse;
 import ru.ifmo.fileservice.model.entity.File;
-import ru.ifmo.fileservice.model.dto.FileDataResponse;
 import ru.ifmo.fileservice.repository.FileRepository;
 
 import java.io.IOException;
@@ -45,80 +46,34 @@ public class FileService {
             throw new StorageException("Не удалось сохранить файл.", e);
         }
     }
-    
-    public FileDataResponse loadDataByName(String filename) throws NoSuchElementException {
+
+    public FileDataResponse loadDataByName(String filename, String owner) throws NoSuchElementException {
         File file = fileRepository.findByName(filename).orElseThrow();
-        byte[] content = file.getData();
-        return new FileDataResponse(file.getId(), file.getName(), new String(content));
+        if (file.getOwner().equals(owner)) {
+            byte[] content = file.getData();
+            return new FileDataResponse(file.getId(), file.getName(), new String(content));
+        }
+        else throw new AccessDeniedException("You aren't the owner of this file");
     }
-    
-    public FileDataResponse loadDataById(Long fileId) throws NoSuchElementException {
+
+    public FileDataResponse loadDataById(Long fileId, String owner) throws NoSuchElementException {
         File file = fileRepository.findById(fileId).orElseThrow();
-        byte[] content = file.getData();
-        return new FileDataResponse(file.getId(), file.getName(), new String(content));
+        if (file.getOwner().equals(owner)) {
+            byte[] content = file.getData();
+            return new FileDataResponse(file.getId(), file.getName(), new String(content));
+        }
+        else throw new AccessDeniedException("You aren't the owner of this file");
     }
     
-    public FileInfoResponse loadInfoById(Long id) throws NoSuchElementException {
+    public FileInfoResponse loadInfoById(Long id, String owner) throws NoSuchElementException {
         File file = fileRepository.findById(id).orElseThrow();
-        return new FileInfoResponse(file.getId(),
-                file.getName(), file.getOwner());
-    }
-    
-//    public FileInfoResponse loadInfoByName(String filename) throws NoSuchElementException {
-//        File file = fileRepository.findByName(filename).orElseThrow();
-//        return new FileInfoResponse(file.getId(),
-//                file.getName(), file.getOwner());
-//    }
-//
-//    public List<FileInfoResponse> listAll() {
-//        Iterable<File> iterable = fileRepository.findAll();
-//        List<FileInfoResponse> all = new ArrayList<>();
-//        iterable.forEach(File -> {
-//            all.add(new FileInfoResponse(File.getId(),
-//                    File.getName(), File.getOwner()));
-//        });
-//        return all;
-//    }
-    
-    public Resource loadAsResource(String filename) throws NoSuchElementException {
-        return new ByteArrayResource(loadDataByName(filename).data().getBytes());
+        if (file.getOwner().equals(owner)) {
+            return new FileInfoResponse(file.getId(), file.getName(), file.getOwner());
+        }
+        else throw new AccessDeniedException("You aren't the owner of this file");
     }
 
-//    public Resource loadAsResourceById(Long fileId) throws NoSuchElementException {
-//        return new ByteArrayResource(loadDataById(fileId).data().getBytes());
-//    }
-//
-//    public void delete(String filename) throws NoSuchElementException {
-//        fileRepository.findByName(filename).orElseThrow();
-//        fileRepository.deleteByName(filename);
-//    }
-//
-//    public void deleteById(Long fileId) throws NoSuchElementException {
-//        fileRepository.findById(fileId).orElseThrow();
-//        fileRepository.deleteById(fileId);
-//    }
-//
-//    public void deleteAll() {
-//        fileRepository.deleteAll();
-//    }
-//
-//    public boolean isOwnedByUser(String username, String filename) throws NoSuchElementException {
-//        File file = fileRepository.findByName(filename).orElseThrow();
-//        return file.getOwner().equals(username);
-//    }
-//
-//    public boolean isOwnedByUser(String username, Long id) throws NoSuchElementException {
-//        File file = fileRepository.findById(id).orElseThrow();
-//        return file.getOwner().equals(username);
-//    }
-
-    public boolean isOwnedByUser(String username, String filename) throws NoSuchElementException {
-        File file = fileRepository.findByName(filename).orElseThrow();
-        return file.getOwner().equals(username);
-    }
-
-    public boolean isOwnedByUser(String username, Long id) throws NoSuchElementException {
-        File file = fileRepository.findById(id).orElseThrow();
-        return file.getOwner().equals(username);
+    public Resource loadAsResource(String filename, String owner) throws NoSuchElementException {
+        return new ByteArrayResource(loadDataByName(filename, owner).data().getBytes());
     }
 }

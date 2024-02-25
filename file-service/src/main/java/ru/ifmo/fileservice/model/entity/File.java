@@ -1,13 +1,17 @@
 package ru.ifmo.fileservice.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
-@Entity
 @Data
+@Entity
 @Table(name = "files")
+@NoArgsConstructor
+@AllArgsConstructor
 public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

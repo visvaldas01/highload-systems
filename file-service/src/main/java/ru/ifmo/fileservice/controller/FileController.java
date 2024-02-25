@@ -7,7 +7,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,16 +26,15 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<FileInfoResponse>> listUploadedFiles() {
         return ResponseEntity.ok(fileService.findAll());
     }
 
     @GetMapping("/{id}/info")
 //    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #id)")
-    public ResponseEntity<FileInfoResponse> getFileInfoById(@PathVariable @Positive @NotNull Long id) {
+    public ResponseEntity<FileInfoResponse> getFileInfoById(@PathVariable @Positive @NotNull Long id, Principal principal) {
         try {
-            FileInfoResponse fileInfoResponse = fileService.loadInfoById(id);
+            FileInfoResponse fileInfoResponse = fileService.loadInfoById(id, principal.getName());
             return ResponseEntity.ok(fileInfoResponse);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -45,9 +43,9 @@ public class FileController {
 
     @GetMapping("/{id}/data")
 //    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #id)")
-    public ResponseEntity<FileDataResponse> getFileDataById(@PathVariable @Positive @NotNull Long id) {
+    public ResponseEntity<FileDataResponse> getFileDataById(@PathVariable @Positive @NotNull Long id, Principal principal) {
         try {
-            FileDataResponse fileDataResponse = fileService.loadDataById(id);
+            FileDataResponse fileDataResponse = fileService.loadDataById(id, principal.getName());
             return ResponseEntity.ok(fileDataResponse);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -57,9 +55,9 @@ public class FileController {
     @GetMapping("/download/{filename:.+}")
     @ResponseBody
 //    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #filename)")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename, Principal principal) {
         try {
-            Resource file = fileService.loadAsResource(filename);
+            Resource file = fileService.loadAsResource(filename, principal.getName());
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                     "attachment; filename=\"" + filename + "\"").body(file);
         } catch (NoSuchElementException e) {

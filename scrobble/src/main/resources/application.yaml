@@ -12,13 +12,13 @@ spring:
   r2dbc:
     password: kt^#54hfff@%*t53gfhj
     username: user-db
-    url: r2dbc:postgresql://localhost:5432/itmusikЦ
+    url: r2dbc:postgresql://localhost:5432/itmusik
 
-  datasource:
-    username: user-db
-    password: kt^#54hfff@%*t53gfhj
-    url: jdbc:postgresql://localhost:5432/itmusik
-    driver-class-name: org.postgresql.Driver
+#  datasource:
+#    username: user-db
+#    password: kt^#54hfff@%*t53gfhj
+#    url: jdbc:postgresql://localhost:5432/itmusik
+#    driver-class-name: org.postgresql.Driver
 
   main:
     allow-circular-references: true

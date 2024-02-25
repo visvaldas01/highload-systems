@@ -20,7 +20,7 @@ spring:
         - id: music
           uri: lb://music
           predicates:
-            - Path=/albums/**, /musicians/**, /scrobbles/**, /songs/**, /tags/**, /tagGroups/**
+            - Path=/albums/**, /musicians/**, /tags/**, /tagGroups/**
 
         - id: song
           uri: lb://song
@@ -30,7 +30,7 @@ spring:
         - id: scrobble
           uri: lb://scrobble
           predicates:
-            - Path=/scrobbles/**
+            - Path=/scrobbles/**, /scrobbles
 #        - id: sber
 #          uri: lb://samokat
 #          predicates:

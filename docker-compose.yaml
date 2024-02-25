@@ -92,7 +92,7 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/itmusik
+      - SPRING_DATASOURCE_URL=r2dbc:postgresql://postgres:5432/itmusik
       - SPRING_DATASOURCE_USERNAME=user-db
       - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none

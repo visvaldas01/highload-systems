@@ -16,14 +16,6 @@ import java.time.LocalDateTime;
 @Testcontainers
 public class ScrobbleServiceTest {
     @Autowired
-    private AlbumService albumService;
-    @Autowired
-    private SongService songService;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private MusicianService musicianService;
-    @Autowired
     private ScrobbleService scrobbleService;
 
     @Container
@@ -42,10 +34,6 @@ public class ScrobbleServiceTest {
 
     @AfterEach
     void clean() {
-        albumService.deleteAll();
-        songService.deleteAll();
-        tagService.deleteAll();
-        musicianService.deleteAll();
         scrobbleService.deleteAll();
     }
 
@@ -56,6 +44,6 @@ public class ScrobbleServiceTest {
         ScrobbleDto scrobbleDto = new ScrobbleDto();
         scrobbleDto.setSong(songDto);
         scrobbleDto.setDate(LocalDateTime.now());
-        Assertions.assertThrows(NullPointerException.class, () -> scrobbleService.addScrobble(scrobbleDto));
+        Assertions.assertThrows(NullPointerException.class, () -> scrobbleService.addScrobble(scrobbleDto, "user1"));
     }
 }

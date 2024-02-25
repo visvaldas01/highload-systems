@@ -9,12 +9,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
+import org.springframework.web.server.WebFilter;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -22,19 +28,18 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class JwtRequestFilter implements WebFilter {
 
     private final JwtTokensUtils jwtTokensUtils;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
-        var authHeader = request.getHeader("Authorization");
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        var authHeader =  exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         String username = null;
         String jwt = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
+        if (authHeader != null && !authHeader.isEmpty() && authHeader.get(0).startsWith("Bearer ")) {
+            jwt = authHeader.get(0).substring(7);
             try {
                 username = jwtTokensUtils.getUsername(jwt);
             } catch (ExpiredJwtException e) {
@@ -53,6 +58,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(token);
         }
 
-        filterChain.doFilter(request, response);
+        return chain.filter(exchange);
     }
 }

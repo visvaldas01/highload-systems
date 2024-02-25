@@ -1,11 +1,13 @@
 package ru.ifmo.highloadsystems.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.ifmo.highloadsystems.exception.RegisterException;
@@ -18,6 +20,7 @@ import ru.ifmo.highloadsystems.utils.JwtTokensUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,20 +28,24 @@ import java.util.Optional;
 public class AuthService {
     private final UserApi userApi;
     private final JwtTokensUtils jwtTokensUtils;
-    //private final AuthenticationManager authenticationManager;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
-        System.out.println("1");
-        //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
-        System.out.println("2");
+    public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) throws AuthenticationException {
+
         var userDetails = userApi.loadUserByUsername(authRequest.username()).getBody();
-        System.out.println("3");
+
+        if (userDetails == null)
+            throw new AuthenticationException("Wrong username");
+
+        if (!passwordEncoder.matches(authRequest.password(), userDetails.password()))
+            throw new AuthenticationException("Wrong password exception");
+
         var token = jwtTokensUtils.generateToken(new org.springframework.security.core.userdetails.User(
                 userDetails.username(),
                 userDetails.password(),
                 userDetails.authorities().stream().map(SimpleGrantedAuthority::new).toList()
         ));
-        System.out.println("4");
+
         return ResponseEntity.ok(new JwtResponse(token));
 
     }

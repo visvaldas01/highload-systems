@@ -1,0 +1,49 @@
+server:
+  port: 8765
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+
+        - id: user
+          uri: lb://user
+          predicates:
+            - Path=/users/**, /role/**
+
+        - id: music
+          uri: lb://music
+          predicates:
+            - Path=/albums/**, /musicians/**, /tags/**, /tagGroups/**
+
+        - id: song
+          uri: lb://song
+          predicates:
+            - Path=/songs/**
+
+        - id: scrobble
+          uri: lb://scrobble
+          predicates:
+            - Path=/scrobbles/**, /scrobbles
+#        - id: sber
+#          uri: lb://samokat
+#          predicates:
+#            - Path=/api/best/*
+#            - Method=GET
+
+#        - id: itmo
+#          uri: lb://delivery
+#          predicates:
+#            - Path=/api/product
+#            - Method=GET
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}

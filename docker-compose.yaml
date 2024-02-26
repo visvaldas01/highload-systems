@@ -2,12 +2,35 @@ version: '3.9'
 
 services:
 
-  app:
-    container_name: app
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: app:latest
+  eureka-server:
+    container_name: eureka-server
+    build: eureka-server
+    image: eureka-server:latest
+    ports:
+      - "8761:8761"
+
+  config-server:
+    container_name: config-server
+    build: config-server
+    image: config-server:latest
+    depends_on:
+      - eureka-server
+    ports:
+      - "8888:8888"
+
+  gateway:
+    container_name: gateway
+    build: gateway
+    image: gateway:latest
+    depends_on:
+      - eureka-server
+    ports:
+      - "8765:8765"
+
+  auth:
+    container_name: auth
+    build: auth
+    image: auth:latest
     depends_on:
       - postgres
     ports:
@@ -17,6 +40,57 @@ services:
       - SPRING_DATASOURCE_USERNAME=user-db
       - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+  music:
+    container_name: music
+    build: music
+    image: music:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/itmusik
+      - SPRING_DATASOURCE_USERNAME=user-db
+      - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+  user:
+    container_name: user
+    build: user
+    image: user:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/itmusik
+      - SPRING_DATASOURCE_USERNAME=user-db
+      - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+  song:
+    container_name: song
+    build: song
+    image: song:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/itmusik
+      - SPRING_DATASOURCE_USERNAME=user-db
+      - SPRING_DATASOURCE_PASSWORD=kt^#54hfff@%*t53gfhj
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+  scrobble:
+    container_name: scrobble
+    build: scrobble
+    image: scrobble:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8084:8084"
 
   postgres:
     container_name: postgres

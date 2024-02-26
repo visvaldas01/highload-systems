@@ -1,6 +1,7 @@
 package ru.ifmo.highloadsystems.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,8 @@ public class SongService {
     private final SongRepository songRepository;
     private final MusicianApi musicianApi;
     private final UserApi userApi;
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public Page<Song> getAll(PageRequest of) {
         return songRepository.findAll(of);
@@ -53,7 +56,7 @@ public class SongService {
     }
 
     @Transactional
-    public void addTo(SongDto dto) {
+    public void addTo(String aut, SongDto dto) {
         Optional<Song> optionalSong = songRepository.findByName(dto.getName());
         if (optionalSong.isPresent()) {
             Song modifiableSong = optionalSong.get();
@@ -61,9 +64,10 @@ public class SongService {
             if (dto.getMusician() != null && !dto.getMusician().isEmpty()) {
                 for (MusicianDto mus : dto.getMusician()) {
                     Optional<Musician> musicianOptional = musicianApi.findByName(mus.getName()).getBody();
+                    kafkaTemplate.send("notification", mus.getName(), "New song added to " + mus.getName());
                     if (musicianOptional.isPresent()) modifiableSong.getMusicians().add(musicianOptional.get());
                     else {
-                        musicianApi.add(mus);
+                        musicianApi.add(aut, mus);
                         modifiableSong.getMusicians().add(musicianApi.findByName(mus.getName()).getBody().orElseThrow());
                     }
                 }

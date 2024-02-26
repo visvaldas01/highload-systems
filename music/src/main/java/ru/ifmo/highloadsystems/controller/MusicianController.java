@@ -35,7 +35,7 @@ public class MusicianController {
         return ResponseEntity.ok(musicianService.fromDto(dto));
     }
 
-    @GetMapping(path = "/musicians/find-by-name")
+    @PostMapping(path = "/find-by-name")
     ResponseEntity<Optional<Musician>> findByName(String name)
     {
         return ResponseEntity.ok(musicianService.findByName(name));

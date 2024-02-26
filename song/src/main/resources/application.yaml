@@ -33,6 +33,9 @@ spring:
       circuitbreaker:
         enabled: true
 
+spring.kafka:
+  bootstrap-servers: broker:9092
+
 eureka:
   client:
     service-url:

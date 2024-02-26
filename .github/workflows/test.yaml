@@ -2,7 +2,7 @@ name: run tests
 
 on:
   push:
-    branches: [ "ci_cd" ]
+    branches: [ "main ]
 
 jobs:
   test:

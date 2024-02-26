@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 
@@ -20,7 +21,7 @@ public interface MusicianApi {
     ResponseEntity<Optional<Musician>> findByName(String name);
 
     @PostMapping(path = "/musicians")
-    ResponseEntity<?> add(MusicianDto dto);
+    ResponseEntity<?> add(@RequestHeader(value = "Authorization")String authHeader, MusicianDto dto);
 
     @PostMapping(path = "/musicians/from-fto")
     ResponseEntity<Collection<Musician>> fromDto(Collection<MusicianDto> dto);

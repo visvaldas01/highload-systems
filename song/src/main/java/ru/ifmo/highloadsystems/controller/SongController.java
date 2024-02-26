@@ -36,8 +36,8 @@ public class SongController {
 
     //TODO
     @PostMapping("/add-to")
-    public Mono<?> addTo(@Valid @RequestBody SongDto songDto) {
-        songService.addTo(songDto);
+    public Mono<?> addTo(@RequestHeader(value = "Authorization") String auth, @Valid @RequestBody SongDto songDto) {
+        songService.addTo(auth, songDto);
         return Mono.empty();
     }
 

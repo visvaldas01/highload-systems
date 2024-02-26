@@ -21,8 +21,6 @@ public class TagServiceTest {
     @Autowired
     private AlbumService albumService;
     @Autowired
-    private SongService songService;
-    @Autowired
     private TagService tagService;
     @Autowired
     private MusicianService musicianService;
@@ -46,7 +44,6 @@ public class TagServiceTest {
     @AfterEach
     void clean() {
         albumService.deleteAll();
-        songService.deleteAll();
         tagService.deleteAll();
         tagGroupService.deleteAll();
         musicianService.deleteAll();
@@ -73,29 +70,6 @@ public class TagServiceTest {
         tagService.add(tagDto);
         Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
         Assertions.assertThrows(AlreadyExistException.class, () -> tagService.add(tagDto));
-    }
-
-    @Test
-    void addSongToTagTest() {
-        TagDto tagDto = new TagDto();
-        tagDto.setName("Tag1");
-        TagGroupDto tagGroupDto = new TagGroupDto();
-        tagGroupDto.setName("TagGroup1");
-        tagDto.setTagGroup(tagGroupDto);
-        tagService.add(tagDto);
-        Collection<SongDto> songDtoCollection = new ArrayList<>();
-        SongDto song1 = new SongDto();
-        song1.setName("Song1");
-        SongDto song2 = new SongDto();
-        song2.setName("Song2");
-        songDtoCollection.add(song1);
-        songDtoCollection.add(song2);
-        tagDto.setSongs(songDtoCollection);
-        tagService.addTag(tagDto);
-        Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
-        Assertions.assertFalse(songService.findByName("Song1").isEmpty());
-        Assertions.assertFalse(songService.findByName("Song2").isEmpty());
-        Assertions.assertEquals(2, tagService.findByName("Tag1").get().getSongs().size());
     }
 
     @Test

@@ -40,7 +40,6 @@ public class UserController {
 
     @PostMapping(path = "/get-new-user")
     ResponseEntity<User> getNewUser(@RequestBody RegistrationUserDto registrationUserDto) {
-        System.out.println("bbbbb");
         return ResponseEntity.ok(userService.getNewUser(registrationUserDto));
     }
 

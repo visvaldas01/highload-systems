@@ -31,6 +31,11 @@ spring:
           uri: lb://scrobble
           predicates:
             - Path=/scrobbles/**, /scrobbles
+
+        - id: notification
+          uri: lb://notification
+          predicates:
+            - Path=/subscribe
 #        - id: sber
 #          uri: lb://samokat
 #          predicates:

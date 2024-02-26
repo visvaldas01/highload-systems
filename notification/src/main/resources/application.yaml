@@ -1,0 +1,23 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: notification
+  flyway:
+    enabled: false
+
+  main:
+    allow-circular-references: true
+
+
+spring.kafka:
+  bootstrap-servers: broker:9092
+  consumer:
+    group-id: app.1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}
+

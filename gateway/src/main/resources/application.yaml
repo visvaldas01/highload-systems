@@ -32,21 +32,21 @@ spring:
           predicates:
             - Path=/scrobbles/**, /scrobbles
 
+        - id: file-service
+          uri: lb://file-service
+          predicates:
+            - Path=/files/**
+
         - id: notification
           uri: lb://notification
           predicates:
             - Path=/subscribe
-#        - id: sber
-#          uri: lb://samokat
-#          predicates:
-#            - Path=/api/best/*
-#            - Method=GET
 
-#        - id: itmo
-#          uri: lb://delivery
-#          predicates:
-#            - Path=/api/product
-#            - Method=GET
+logging:
+  level:
+    web: trace
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: trace
+    io.github.resilience4j: debug
 
 eureka:
   client:

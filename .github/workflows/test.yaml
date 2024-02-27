@@ -14,4 +14,7 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Test
-        run: ./gradlew test
+        run: |
+          docker-compose up -d postgres
+          cat ./scrobble/src/main/resources/application-test.yaml > ./scrobble/src/main/resources/application.yaml
+          ./gradlew test

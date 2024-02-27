@@ -61,7 +61,7 @@ public class SongServiceTest {
     void nowhereToAddTest() {
         SongDto songDto = new SongDto();
         songDto.setName("Song1");
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> songService.addTo(songDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> songService.addTo("", songDto));
         Assertions.assertEquals("This song does not exist", ex.getMessage());
     }
 
@@ -70,7 +70,7 @@ public class SongServiceTest {
         SongDto songDto = new SongDto();
         songDto.setName("Song1");
         songService.add(songDto);
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> songService.addTo(songDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> songService.addTo("", songDto));
         Assertions.assertEquals("No data to add in song", ex.getMessage());
     }
 }

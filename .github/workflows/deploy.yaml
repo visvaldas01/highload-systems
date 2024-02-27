@@ -19,7 +19,7 @@ jobs:
             cd highload-systems
             git reset --hard
             git fetch
-            git checkout origin/ci_cd
+            git checkout origin/main
             cd ./scripts
             ./clean
             ./start_server

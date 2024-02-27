@@ -37,6 +37,18 @@ spring:
     import:
       optional:configserver:http://config-server:8888
 
+springdoc:
+  api-docs:
+    path: /songs/v3/api-docs
+
+  swagger-ui:
+    path: /songs/swagger-ui.html
+
+  endpoints:
+    web:
+      exposure:
+        include: /*
+
 spring.kafka:
   bootstrap-servers: broker:9092
 

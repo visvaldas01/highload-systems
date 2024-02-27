@@ -32,6 +32,18 @@ spring:
     import:
       optional:configserver:http://config-server:8888
 
+springdoc:
+  api-docs:
+    path: /scrobbles/v3/api-docs
+
+  swagger-ui:
+    path: /scrobbles/swagger-ui.html
+
+  endpoints:
+    web:
+      exposure:
+        include: /*
+
 eureka:
   client:
     service-url:

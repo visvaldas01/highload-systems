@@ -37,6 +37,18 @@ spring:
     import:
       optional:configserver:http://config-server:8888
 
+springdoc:
+  api-docs:
+    path: /music/v3/api-docs
+
+  swagger-ui:
+    path: /music/swagger-ui.html
+
+  endpoints:
+    web:
+      exposure:
+        include: /*
+
 eureka:
   client:
     service-url:

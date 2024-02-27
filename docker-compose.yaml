@@ -15,6 +15,12 @@ services:
     image: config-server:latest
     depends_on:
       - eureka-server
+    healthcheck:
+      test: "true"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
     ports:
       - "8888:8888"
 
@@ -32,7 +38,10 @@ services:
     build: auth
     image: auth:latest
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
@@ -46,7 +55,10 @@ services:
     build: music
     image: music:latest
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:
@@ -60,7 +72,10 @@ services:
     build: user
     image: user:latest
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     ports:
       - "8082:8082"
     environment:
@@ -74,7 +89,10 @@ services:
     build: song
     image: song:latest
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     ports:
       - "8083:8083"
     environment:
@@ -88,7 +106,10 @@ services:
     build: scrobble
     image: scrobble:latest
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     ports:
       - "8084:8084"
 
@@ -97,7 +118,10 @@ services:
     build: file-service
     image: file-service:latest
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     ports:
       - "8085:8085"
     environment:
@@ -111,7 +135,10 @@ services:
     build: notification
     image: notification:latest
     depends_on:
-      - broker
+      broker:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     ports:
       - "8086:8086"
     environment:

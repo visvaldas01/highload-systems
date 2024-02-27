@@ -12,4 +12,4 @@ echo -e "${CL}remove docker containers:${NC}"
 docker container rm auth music user postgres eureka-server config-server gateway scrobble song file-service zookeeper broker notification
 echo
 echo -e "${CL}remove docker images:${NC}"
-docker image rm auth music user postgres eureka-server config-server gateway scrobble song file-service notification
+docker image rm auth music user eureka-server config-server gateway scrobble song file-service notification

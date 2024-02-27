@@ -11,6 +11,14 @@ springdoc:
     urls:
       - url: /scrobbles/v3/api-docs
         name: Scrobbles
+      - url: /auth/v3/api-docs
+        name: Auth
+      - url: /music/v3/api-docs
+        name: Music
+      - url: /songs/v3/api-docs
+        name: Song
+      - url: /users/v3/api-docs
+        name: User
   swagger-ui.path: /swagger-ui/index.html
 
 spring:
@@ -32,7 +40,7 @@ spring:
         - id: music
           uri: lb://music
           predicates:
-            - Path=/albums/**, /musicians/**, /tags/**, /tagGroups/**
+            - Path=/albums/**, /musicians/**, /tags/**, /tagGroups/**, /music/**
 
         - id: song
           uri: lb://song

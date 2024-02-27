@@ -37,6 +37,18 @@ spring:
     import:
       optional:configserver:http://localhost:8888
 
+springdoc:
+  api-docs:
+    path: /users/v3/api-docs
+
+  swagger-ui:
+    path: /users/swagger-ui.html
+
+  endpoints:
+    web:
+      exposure:
+        include: /*
+
 eureka:
   client:
     service-url:

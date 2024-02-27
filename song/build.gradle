@@ -48,6 +48,7 @@ dependencies {
     implementation 'io.projectreactor:reactor-core'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.1.2'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0'
 }
 
 dependencyManagement {

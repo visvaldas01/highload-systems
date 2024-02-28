@@ -17,4 +17,5 @@ jobs:
         run: |
           docker-compose up -d postgres
           cat ./scrobble/src/main/resources/application-test.yaml > ./scrobble/src/main/resources/application.yaml
+          cat ./song/src/main/resources/application-test.yaml > ./song/src/main/resources/application.yaml
           ./gradlew test

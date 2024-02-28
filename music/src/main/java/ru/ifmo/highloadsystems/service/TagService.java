@@ -49,7 +49,7 @@ public class TagService {
     }
 
     @Transactional
-    public void addTag(TagDto tagDto) {
+    public void addTag(String aut, TagDto tagDto) {
         Optional<Tag> optionalTag = tagRepository.findByName(tagDto.getName());
         if (optionalTag.isPresent()) {
             Tag modifiableTag = optionalTag.get();
@@ -64,11 +64,11 @@ public class TagService {
                 }
             } else if (tagDto.getSongs() != null && !tagDto.getSongs().isEmpty()) {
                 for (SongDto song : tagDto.getSongs()) {
-                    Optional<Song> songOptional = songApi.findByName(song.getName()).block();
+                    Optional<Song> songOptional = songApi.findByName(aut, song.getName()).block();
                     if (songOptional.isPresent()) modifiableTag.getSongs().add(songOptional.get());
                     else {
-                        songApi.add(song);
-                        modifiableTag.getSongs().add(songApi.findByName(song.getName()).block().orElseThrow());
+                        songApi.add(aut, song);
+                        modifiableTag.getSongs().add(songApi.findByName(aut, song.getName()).block().orElseThrow());
                     }
                 }
             } else throw new NothingToAddException("No data to add in message");

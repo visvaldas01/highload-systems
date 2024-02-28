@@ -3,10 +3,7 @@ package ru.ifmo.highloadsystems.rest;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 import ru.ifmo.highloadsystems.model.dto.MusicianDto;
 import ru.ifmo.highloadsystems.model.entity.Musician;
 
@@ -18,14 +15,14 @@ import java.util.Optional;
         configuration = FeignConfig.class)
 public interface MusicianApi {
     @GetMapping(path = "/musicians/find-by-name")
-    ResponseEntity<Optional<Musician>> findByName(String name);
+    ResponseEntity<Optional<Musician>> findByName(@RequestHeader(value = "Authorization")String authHeader, @RequestBody String name);
 
     @PostMapping(path = "/musicians")
     ResponseEntity<?> add(@RequestHeader(value = "Authorization")String authHeader, MusicianDto dto);
 
     @PostMapping(path = "/musicians/from-fto")
-    ResponseEntity<Collection<Musician>> fromDto(Collection<MusicianDto> dto);
+    ResponseEntity<Collection<Musician>> fromDto(@RequestHeader(value = "Authorization")String authHeader, Collection<MusicianDto> dto);
 
     @DeleteMapping(path = "/musicians/delete-all")
-    ResponseEntity<?> deleteAll();
+    ResponseEntity<?> deleteAll(@RequestHeader(value = "Authorization")String authHeader);
 }

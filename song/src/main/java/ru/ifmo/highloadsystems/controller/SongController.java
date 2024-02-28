@@ -34,7 +34,7 @@ public class SongController {
     @PostMapping
     public Mono<?> add(@Valid @RequestBody SongDto songDto) {
         songService.add(songDto);
-        return Mono.empty();
+        return Mono.just(songDto);
     }
 
     //TODO
@@ -42,7 +42,7 @@ public class SongController {
     @PostMapping("/add-to")
     public Mono<?> addTo(@RequestHeader(value = "Authorization") String auth, @Valid @RequestBody SongDto songDto) {
         songService.addTo(auth, songDto);
-        return Mono.empty();
+        return Mono.just(songDto);
     }
 
     @Operation(summary = "Get recommended song")
@@ -63,6 +63,6 @@ public class SongController {
     Mono<?> save(Song song)
     {
         songService.save(song);
-        return Mono.empty();
+        return Mono.just(song);
     }
 }

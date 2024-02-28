@@ -57,18 +57,19 @@ public class SongService {
 
     @Transactional
     public void addTo(String aut, SongDto dto) {
-        Optional<Song> optionalSong = songRepository.findByName(dto.getName());
+        Optional<Song> optionalSong = findByName(dto.getName());
         if (optionalSong.isPresent()) {
             Song modifiableSong = optionalSong.get();
 
             if (dto.getMusician() != null && !dto.getMusician().isEmpty()) {
                 for (MusicianDto mus : dto.getMusician()) {
-                    Optional<Musician> musicianOptional = musicianApi.findByName(mus.getName()).getBody();
+                    Optional<Musician> musicianOptional = musicianApi.findByName(aut, mus.getName()).getBody();
                     kafkaTemplate.send("notification", mus.getName(), "New song added to " + mus.getName());
-                    if (musicianOptional.isPresent()) modifiableSong.getMusicians().add(musicianOptional.get());
+                    if (musicianOptional.isPresent())
+                        modifiableSong.getMusicians().add(musicianOptional.get());
                     else {
                         musicianApi.add(aut, mus);
-                        modifiableSong.getMusicians().add(musicianApi.findByName(mus.getName()).getBody().orElseThrow());
+                        modifiableSong.getMusicians().add(musicianApi.findByName(aut, mus.getName()).getBody().orElseThrow());
                     }
                 }
             } else throw new NothingToAddException("No data to add in song");

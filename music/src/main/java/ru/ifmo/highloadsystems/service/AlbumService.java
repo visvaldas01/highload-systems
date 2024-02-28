@@ -49,18 +49,18 @@ public class AlbumService {
     }
 
     @Transactional
-    public void addToAlbum(AlbumDto albumDto) {
+    public void addToAlbum(String aut, AlbumDto albumDto) {
         Optional<Album> optionalAlbum = albumRepository.findByName(albumDto.getName());
         if (optionalAlbum.isPresent()) {
             Album modifiableAlbum = optionalAlbum.get();
 
             if (albumDto.getSongs() != null && !albumDto.getSongs().isEmpty()) {
                 for (SongDto song : albumDto.getSongs()) {
-                    Optional<Song> songOptional = songApi.findByName(song.getName()).block();
+                    Optional<Song> songOptional = songApi.findByName(aut, song.getName()).block();
                     if (songOptional.isPresent()) modifiableAlbum.getSongs().add(songOptional.get());
                     else {
-                        songApi.add(song);
-                        modifiableAlbum.getSongs().add(songApi.findByName(song.getName()).block().get());
+                        songApi.add(aut, song);
+                        modifiableAlbum.getSongs().add(songApi.findByName(aut, song.getName()).block().get());
                     }
                 }
             } else if (albumDto.getTags() != null && !albumDto.getTags().isEmpty()) {

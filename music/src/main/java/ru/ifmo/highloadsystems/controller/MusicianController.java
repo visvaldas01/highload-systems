@@ -43,7 +43,7 @@ public class MusicianController {
 
     @Operation(summary = "Find musician info from the database by his name")
     @PostMapping(path = "/find-by-name")
-    ResponseEntity<Optional<Musician>> findByName(String name)
+    ResponseEntity<Optional<Musician>> findByName(@RequestBody String name)
     {
         return ResponseEntity.ok(musicianService.findByName(name));
     }

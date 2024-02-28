@@ -84,7 +84,7 @@ public class AlbumServiceTest {
         tag2.setTagGroup(tagGroupDto2);
         tagDtoCollection.add(tag2);
         albumDto.setTags(tagDtoCollection);
-        albumService.addToAlbum(albumDto);
+        albumService.addToAlbum("", albumDto);
         Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
         Assertions.assertFalse(tagService.findByName("Tag1").isEmpty());
         Assertions.assertFalse(tagService.findByName("Tag2").isEmpty());
@@ -104,7 +104,7 @@ public class AlbumServiceTest {
         musicianDtoCollection.add(musicianDto1);
         musicianDtoCollection.add(musicianDto2);
         albumDto.setMusicians(musicianDtoCollection);
-        albumService.addToAlbum(albumDto);
+        albumService.addToAlbum("", albumDto);
         Assertions.assertFalse(albumService.findByName("Album1").isEmpty());
         Assertions.assertFalse(musicianService.findByName("Musician1").isEmpty());
         Assertions.assertFalse(musicianService.findByName("Musician2").isEmpty());
@@ -115,7 +115,7 @@ public class AlbumServiceTest {
     void nowhereToAddTest() {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> albumService.addToAlbum(albumDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> albumService.addToAlbum("", albumDto));
         Assertions.assertEquals("This album does not exist", ex.getMessage());
     }
 
@@ -124,7 +124,7 @@ public class AlbumServiceTest {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setName("Album1");
         albumService.addNewAlbum(albumDto);
-        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> albumService.addToAlbum(albumDto));
+        NothingToAddException ex = Assertions.assertThrows(NothingToAddException.class, () -> albumService.addToAlbum("", albumDto));
         Assertions.assertEquals("No data to add in message", ex.getMessage());
     }
 }

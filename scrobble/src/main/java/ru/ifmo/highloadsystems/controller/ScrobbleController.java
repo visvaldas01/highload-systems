@@ -30,8 +30,8 @@ public class ScrobbleController {
 
     @Operation(summary = "Add a new scrobble to the database")
     @PostMapping
-    public Mono<Scrobble> addScrobble(@Valid @RequestBody ScrobbleDto scrobbleDto, Principal principal) {
-        return scrobbleService.addScrobble(scrobbleDto, principal.getName());
+    public Mono<Scrobble> addScrobble(@RequestHeader(value = "Authorization") String aut, @Valid @RequestBody ScrobbleDto scrobbleDto, Principal principal) {
+        return scrobbleService.addScrobble(aut, scrobbleDto, principal.getName());
     }
 
     @Operation(summary = "Get song scrobbling statistics")

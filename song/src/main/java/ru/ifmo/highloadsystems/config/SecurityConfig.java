@@ -45,7 +45,7 @@ public class SecurityConfig {
                         //.requestMatchers("/scrobbles").hasAnyRole("USER", "ADMIN")
                         //.requestMatchers("/scrobbles/stats").permitAll()
                         .requestMatchers("/songs/add-to").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/songs").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/songs").permitAll()
                         //.requestMatchers("/songs/add_to").hasAnyRole("USER", "ADMIN")
                         //.requestMatchers("/songs/recommendations").permitAll()
                         //.requestMatchers("/tags/**").hasAnyRole("USER", "ADMIN")

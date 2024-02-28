@@ -36,8 +36,8 @@ public class AlbumController {
     @Operation(summary = "Update album info in the database")
     //TODO
     @PostMapping("/add_to_album")
-    public ResponseEntity<String> addToAlbum(@Valid @RequestBody AlbumDto album) {
-        albumService.addToAlbum(album);
+    public ResponseEntity<String> addToAlbum(@RequestHeader(value = "Authorization") String aut, @Valid @RequestBody AlbumDto album) {
+        albumService.addToAlbum(aut, album);
         return ResponseEntity.ok().build();
     }
 

@@ -39,25 +39,25 @@ public class ScrobbleService {
     }
 
     @Transactional
-    public Mono<Scrobble> addScrobble(ScrobbleDto scrobbleDto, String username) {
+    public Mono<Scrobble> addScrobble(String aut, ScrobbleDto scrobbleDto, String username) {
         Optional<User> user = userApi.findByUsername(username).getBody();
         if (!user.isPresent())
             throw new NoPermissionException("Don't have rights to add scrobble");
-        if (songApi.findByName(scrobbleDto.getSong().getName()).block().isEmpty()) {
+        if (songApi.findByName(aut, scrobbleDto.getSong().getName()).block().isEmpty()) {
             Song song = Song.builder()
-                    .musicians(musicApi.fromDtoMusician(scrobbleDto.getSong().getMusician()).getBody())
-                    .albums(musicApi.fromDtoAlbum(scrobbleDto.getSong().getAlbum()).getBody())
-                    .tags(musicApi.fromDtoTag(scrobbleDto.getSong().getTag()).getBody())
+                    .musicians(musicApi.fromDtoMusician(aut, scrobbleDto.getSong().getMusician()).getBody())
+                    .albums(musicApi.fromDtoAlbum(aut, scrobbleDto.getSong().getAlbum()).getBody())
+                    .tags(musicApi.fromDtoTag(aut, scrobbleDto.getSong().getTag()).getBody())
                     .name(scrobbleDto.getSong().getName())
                     .build();
-            songApi.save(song);
+            songApi.save(aut, song);
             return save(new Scrobble(
                     song.getId(),
                     user.get().getId(),
                     scrobbleDto.getDate()));
         } else {
             Scrobble scrobble = new Scrobble(
-                    songApi.findByName(scrobbleDto.getSong().getName()).block().get().getId(),
+                    songApi.findByName(aut, scrobbleDto.getSong().getName()).block().get().getId(),
                     user.get().getId(),
                     scrobbleDto.getDate());
             return save(scrobble);

@@ -35,8 +35,8 @@ public class TagController {
     //TODO
     @Operation(summary = "Update tag info in the database")
     @PostMapping("/add_to_tag")
-    public ResponseEntity<?> addToTag(@Valid @RequestBody TagDto tag) {
-        tagService.addTag(tag);
+    public ResponseEntity<?> addToTag(@RequestHeader(value = "Authorization") String aut, @Valid @RequestBody TagDto tag) {
+        tagService.addTag(aut, tag);
         return ResponseEntity.ok().build();
     }
 

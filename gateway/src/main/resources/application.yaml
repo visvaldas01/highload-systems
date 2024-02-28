@@ -27,30 +27,72 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: auth-refresh
+          uri: lb://auth
+          predicates:
+            - Path=/auth/refresh
+          filters:
+            - SetPath=/actuator/refresh
+
         - id: auth
           uri: lb://auth
           predicates:
             - Path=/auth/**
+
+        - id: user-refresh
+          uri: lb://user
+          predicates:
+            - Path=/users/refresh
+          filters:
+            - SetPath=/actuator/refresh
 
         - id: user
           uri: lb://user
           predicates:
             - Path=/users/**, /role/**
 
+        - id: music-refresh
+          uri: lb://music
+          predicates:
+            - Path=/music/refresh
+          filters:
+            - SetPath=/actuator/refresh
+
         - id: music
           uri: lb://music
           predicates:
             - Path=/albums/**, /musicians/**, /tags/**, /tagGroups/**, /music/**
+
+        - id: song-refresh
+          uri: lb://song
+          predicates:
+            - Path=/songs/refresh
+          filters:
+            - SetPath=/actuator/refresh
 
         - id: song
           uri: lb://song
           predicates:
             - Path=/songs/**
 
+        - id: scrobble-refresh
+          uri: lb://scrobble
+          predicates:
+            - Path=/scrobbles/refresh
+          filters:
+            - SetPath=/actuator/refresh
+
         - id: scrobble
           uri: lb://scrobble
           predicates:
             - Path=/scrobbles/**, /scrobbles
+
+        - id: file-service-refresh
+          uri: lb://file-service
+          predicates:
+            - Path=/files/refresh
+          filters:
+            - SetPath=/actuator/refresh
 
         - id: file-service
           uri: lb://file-service

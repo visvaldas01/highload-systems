@@ -1,5 +1,7 @@
 package ru.ifmo.fileservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +21,21 @@ import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Tag(name = "File service controller")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/files")
 public class FileController {
     private final FileService fileService;
 
+    @Operation(summary = "Get list of all files in the database")
     @GetMapping
-    public ResponseEntity<List<FileInfoResponse>> listUploadedFiles() {
+    public ResponseEntity<List<FileInfoResponse>> getAll() {
         return ResponseEntity.ok(fileService.findAll());
     }
 
+    @Operation(summary = "Get file info by ID")
     @GetMapping("/{id}/info")
-//    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #id)")
     public ResponseEntity<FileInfoResponse> getFileInfoById(@PathVariable @Positive @NotNull Long id, Principal principal) {
         try {
             FileInfoResponse fileInfoResponse = fileService.loadInfoById(id, principal.getName());
@@ -41,8 +45,8 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Get file data by ID")
     @GetMapping("/{id}/data")
-//    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #id)")
     public ResponseEntity<FileDataResponse> getFileDataById(@PathVariable @Positive @NotNull Long id, Principal principal) {
         try {
             FileDataResponse fileDataResponse = fileService.loadDataById(id, principal.getName());
@@ -52,9 +56,9 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Download file from the database by its name")
     @GetMapping("/download/{filename:.+}")
     @ResponseBody
-//    @PreAuthorize("@storageService.isOwnedByUser(authentication.name, #filename)")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename, Principal principal) {
         try {
             Resource file = fileService.loadAsResource(filename, principal.getName());
@@ -65,8 +69,8 @@ public class FileController {
         }
     }
 
+    @Operation(summary = "Upload file to the database")
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
-//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal) {
         try {
             fileService.store(file, principal.getName());
